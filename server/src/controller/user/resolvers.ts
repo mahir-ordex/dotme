@@ -1,8 +1,10 @@
 import axios from "axios";
 import { prisma } from "../../utils/prismaClient.js";
 import JwtServices from "../../utils/jwtServices.js";
+import type { graphQLContext } from "../../interfaces.js";
+import type { User } from "@prisma/client";
 
-export const resolvers = {
+const resolvers = {
     Query: {
         verifyGoogleToken: async (parent: any, { token }: { token: string }) => {
             const googleToken = token;
@@ -11,8 +13,6 @@ export const resolvers = {
             googleOAuthUrl.searchParams.set("id_token", googleToken);
 
             try {
-
-
                 const { data } = await axios.get(googleOAuthUrl.toString(), {
                     responseType: "json"
                 });
@@ -38,10 +38,29 @@ export const resolvers = {
                 }
                 return JwtServices.generateToken(user);
 
-            }catch(e:any){
-                console.log("error :",e)
+            } catch (e: any) {
+                console.log("error :", e)
                 return e
             }
+        },
+        getCurrentUser: async (parent: any, args: any, context: any) => {
+            console.log('Context user:', context.user); // Debug log
+            if (!context.user) {
+                return null;
+            }
+            return context.user;
         }
     }
 };
+
+const extraResolvers = {
+    tweets: async (parent: User) => {
+        return await prisma.tweet.findMany({
+            where: {
+                authorId: parent.id
+            }
+        });
+    }
+};
+
+export { resolvers, extraResolvers };

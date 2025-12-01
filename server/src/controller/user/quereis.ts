@@ -1,3 +1,4 @@
-export const quereis = `#graphql
-  verifyGoogleToken(token: String!): String
+export const quereis = `
+    verifyGoogleToken(token: String!): String
+    getCurrentUser: User
 `;

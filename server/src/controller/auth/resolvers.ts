@@ -1,5 +1,5 @@
 import axios from "axios";
-import {prisma} from "../../utils/prismaClient.js"
+import { prisma } from "../../utils/prismaClient.js"
 import JwtServices from "../../utils/jwtServices.js";
 
 
@@ -35,8 +35,7 @@ const resolvers = {
                 return JwtServices.generateToken(newUser)
             }
             return JwtServices.generateToken(user)
-        }
-
+        },
     }
 }
 

@@ -1,6 +1,12 @@
-import {quereis} from "./quereis.js"
-import {resolvers} from "./resolvers.js"
-import {types} from "./types.js"
+import { quereis } from "./quereis.js";
+import { types } from "./types.js";
+import { resolvers, extraResolvers } from "./resolvers.js";
 
-
-export const User = {types,quereis,resolvers}
+export const User = {
+    quereis,
+    types,
+    resolvers: {
+        ...resolvers,
+        User: extraResolvers  // Add User type resolver
+    }
+};
