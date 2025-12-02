@@ -49,6 +49,13 @@ const resolvers = {
                 return null;
             }
             return context.user;
+        },
+        getUserById: async (parent: any, { id }: { id: string }) => {
+            return await prisma.user.findUnique({
+                where: {
+                    id: id
+                },
+            });
         }
     }
 };
@@ -58,6 +65,9 @@ const extraResolvers = {
         return await prisma.tweet.findMany({
             where: {
                 authorId: parent.id
+            },
+            orderBy: {
+                createdAt: 'desc'
             }
         });
     }
