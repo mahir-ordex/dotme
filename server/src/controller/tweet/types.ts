@@ -10,5 +10,5 @@ export const types = `#graphql
   input CreateTweetInput {
     content: String!
     imageUrl: String
-  }
+  } 
 `;

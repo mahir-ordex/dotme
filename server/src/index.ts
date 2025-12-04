@@ -7,6 +7,7 @@ import { Tweet } from './controller/tweet/index.js';
 import cors from "cors";
 import JwtServices from "./utils/jwtServices.js"
 import { prisma } from './utils/prismaClient.js';
+import cookieParser from 'cookie-parser';
 
 const app = express();
 
@@ -45,12 +46,25 @@ const server = new ApolloServer({
 await server.start();
 
 app.use(cors({
-  origin: "*",
-  credentials: true
+  origin: 'http://localhost:3000',
+  credentials: true,
+  methods: ['GET', 'POST', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
 }));
 
+app.use((req, res, next) => {
+  console.log(`${req.method} ${req.path}`);
+  console.log('Origin:', req.get('origin'));
+  console.log('Cookies:', req.cookies);
+  next();
+});
+
+
+app.use(cookieParser());
+app.use(express.json());
+
 app.use("/graphql", express.json(), expressMiddleware(server, {
-  context: async ({ req }) => {
+  context: async ({ req, res}) => {
     const authHeader = req.headers.authorization;
     const token = authHeader?.startsWith('Bearer ') ? authHeader.slice(7) : authHeader;
     
@@ -62,13 +76,13 @@ app.use("/graphql", express.json(), expressMiddleware(server, {
             where: { id: userPayload.id }
           });
           console.log('Context user:', user);
-          return { user };
+          return { user, req, res }; // Remove the types, pass actual objects
         }
       } catch (error: any) {
         console.log('Token decode failed:', error.message);
       }
     }
-    return {};
+    return { req, res }; // Always return req and res
   }
 }));
 

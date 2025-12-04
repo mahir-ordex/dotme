@@ -9,7 +9,7 @@ class JwtServices{
             email:user.email
         }
         console.log("jwt secrate :",JWTsecret)
-        const token = JWT.sign(payload,JWTsecret)
+        const token = JWT.sign(payload,JWTsecret,{expiresIn:'30d'})
 
         return token
     }
