@@ -6,11 +6,14 @@ import type { User } from "@prisma/client";
 
 const resolvers = {
     Query: {
-        verifyGoogleToken: async (parent: any, { token }: { token: string }) => {
+        verifyGoogleToken: async (parent: any, { token }: { token: string }, context: any) => {
             const googleToken = token;
             console.log("google token : ", googleToken)
             const googleOAuthUrl = new URL("https://oauth2.googleapis.com/tokeninfo");
             googleOAuthUrl.searchParams.set("id_token", googleToken);
+
+            const { res } = context
+            let jwtToken: string | null = null;
 
             try {
                 const { data } = await axios.get(googleOAuthUrl.toString(), {
@@ -34,9 +37,14 @@ const resolvers = {
                             profileImage: data.picture
                         }
                     });
-                    return JwtServices.generateToken(newUser);
+
+                    jwtToken = await JwtServices.generateToken(newUser);
+                    res.cookie("token", jwtToken, { httpOnly: true });
+                    return jwtToken;
                 }
-                return JwtServices.generateToken(user);
+                jwtToken = await JwtServices.generateToken(user);
+                    res.cookie("token", jwtToken, { httpOnly: true });
+                    return jwtToken;
 
             } catch (e: any) {
                 console.log("error :", e)
