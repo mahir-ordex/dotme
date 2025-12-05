@@ -15,9 +15,9 @@ export function RightSidebar() {
   ];
 
   return (
-    <div className="w-80 p-4 hidden lg:block">
-      {/* Search Bar - This would need to be a client component for functionality */}
-      <div className="relative mb-4">
+    <div className="w-full space-y-4">
+      {/* Search Bar */}
+      <div className="relative">
         <div className="absolute inset-y-0 left-0 pl-4 flex items-center">
           <Search className="h-5 w-5 text-gray-500" />
         </div>
@@ -30,7 +30,7 @@ export function RightSidebar() {
       </div>
 
       {/* What's happening */}
-      <div className="bg-gray-900 rounded-2xl p-4 mb-4">
+      <div className="bg-gray-900 rounded-2xl p-4">
         <h2 className="text-xl font-bold mb-3">What's happening</h2>
         <div className="space-y-3">
           {trendingTopics.map((trend, index) => (
@@ -75,7 +75,7 @@ export function RightSidebar() {
       </div>
 
       {/* Footer Links */}
-      <div className="mt-4 px-4">
+      <div className="px-2">
         <div className="flex flex-wrap text-[13px] text-gray-500 leading-4">
           <a href="#" className="hover:underline mr-3 mb-1">Terms of Service</a>
           <a href="#" className="hover:underline mr-3 mb-1">Privacy Policy</a>

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import QueryProvider from './components/QueryProvider';
 import { GoogleOAuthProvider } from "@react-oauth/google";
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 
 export const metadata: Metadata = {
     title: ".Me - Social App",

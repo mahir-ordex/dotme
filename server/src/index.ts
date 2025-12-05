@@ -46,7 +46,7 @@ const server = new ApolloServer({
 await server.start();
 
 app.use(cors({
-  origin: "*",
+  origin: "http://localhost:3000",
   credentials: true
 }));
 

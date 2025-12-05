@@ -1,12 +1,10 @@
-import { FeedCard } from "./components/feedCart";
 import { Navbar } from './components/Navbar';
 import { RightSidebar } from './components/RightSidebar';
-import TweetComposer from './components/TweetComposer';
 import { redirect } from 'next/navigation';
 import { cookies } from "next/headers";
 import { GraphQLClient } from "graphql-request";
 import { getCurrentUserQuery } from "../graphql/query/user";
-import { getAllTweetsQuery } from "../graphql/query/tweet";
+import ClientSideContent from "./components/ClientSideContent";
 
 export default async function Home() {
   const cookieStore = cookies();
@@ -23,16 +21,7 @@ export default async function Home() {
     return data.getCurrentUser;
   }
 
-  const fetchAllTweets = async () => {
-    const {data} = await client.rawRequest(getAllTweetsQuery as any, {token});
-    return data.getAllTweets;
-  }
-
-  const [user, tweets = []] = await Promise.all([
-    fetchCurrentUser(),
-    fetchAllTweets()
-  ]);
-
+  const user = await fetchCurrentUser();
 
   // Redirect to login if no user
   if (!user) {
@@ -40,33 +29,32 @@ export default async function Home() {
   }
 
   return (
-    <div className="min-h-screen bg-black text-white flex">
+    <div className="min-h-screen bg-black text-white">
+      {/* Navbar - Bottom on mobile, Left sidebar on desktop */}
       <Navbar user={user} />
 
-      {/* Main Content */}
-      <div className="flex-1 max-w-[600px] border-r border-gray-800 ml-64 xl:ml-80">
-        {/* Header */}
-        <div className="sticky top-0 backdrop-blur-md bg-black/80 border-b border-gray-800 px-4 py-3">
-          <h1 className="text-xl font-bold">Home</h1>
-        </div>
+      {/* Main Layout with proper responsive margins */}
+      <div className="md:ml-16 lg:ml-64 xl:ml-80 pb-16 md:pb-0">
+        <div className="flex max-w-7xl mx-auto">
+          {/* Main Content - Centered feed */}
+          <main className="flex-1 min-w-0 w-full md:max-w-[600px] border-r border-gray-800">
+            {/* Header - Sticky on scroll */}
+            <div className="sticky top-0 backdrop-blur-md bg-black/80 border-b border-gray-800 px-4 py-3 z-40">
+              <h1 className="text-xl font-bold">Home</h1>
+            </div>
 
-        {/* Tweet Composer - Client Component */}
-        <TweetComposer user={user} />
+            {/* Client Side Content (Tweet Composer + Feed) */}
+            <ClientSideContent user={user} />
+          </main>
 
-        {/* Feed - Server Components */}
-        <div>
-          {tweets?.length === 0 ? (
-            <div className="p-8 text-center text-gray-500">No tweets yet</div>
-          ) : (
-            tweets?.map((tweet: any) => (
-              <FeedCard key={tweet.id} tweet={tweet} />
-            ))
-          )}
+          {/* Right Sidebar - Scrolls with content, sticky positioning for natural scroll */}
+          <aside className="hidden xl:block xl:w-80">
+            <div className="sticky top-0 p-4">
+              <RightSidebar />
+            </div>
+          </aside>
         </div>
       </div>
-
-      {/* Right Sidebar */}
-      <RightSidebar />
     </div>
   );
 }

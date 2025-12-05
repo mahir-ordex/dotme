@@ -3,7 +3,7 @@ import { BiRepost } from "react-icons/bi";
 import { FaRegHeart } from "react-icons/fa6";
 import { AiOutlineAreaChart } from "react-icons/ai";
 import { LuShare } from "react-icons/lu";
-import { Tweet } from "@/gql/graphql";
+import { Tweet } from "../../gql/graphql";
 import Link from "next/link";
 
 interface FeedCardProp {
@@ -37,12 +37,9 @@ export const FeedCard = ({ tweet }: FeedCardProp) => {
         }
     }
 
-    const author = tweet.author || {
-        id: 'unknown',
-        firstName: 'Unknown',
-        lastName: 'User',
-        profileImage: 'https://api.dicebear.com/7.x/avataaars/svg?seed=unknown'
-    };
+    const author = tweet.author!;
+    console.log("Rendering tweet:", tweet);
+
 
     return (
         <div className="grid grid-cols-12 border-b border-gray-700 p-4 hover:bg-gray-900/50 transition-colors">
