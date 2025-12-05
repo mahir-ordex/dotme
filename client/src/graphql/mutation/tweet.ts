@@ -1,4 +1,4 @@
-import { graphql } from "@/gql";
+import { graphql } from "../../gql";
 
 export const createTweetMutation = graphql(`
     mutation CreateTweet($payload: CreateTweetInput!){

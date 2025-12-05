@@ -1,7 +1,7 @@
 import { BackButton } from '../components/BackButton';
 import { Navbar } from '../components/Navbar';
 import { GraphQLClient } from 'graphql-request';
-import { getUserByIdQuery } from '@/graphql/query/user';
+import { useGetUserById } from '../../Hooks/user';
 import { notFound } from 'next/navigation';
 
 
@@ -15,9 +15,8 @@ async function ProfilePage({ params }: { params: Promise<{ id: string }> }) {
     let user = null;
     let error = null;
     try {
-        const client = new GraphQLClient('http://localhost:8000/graphql');
-        const result = await client.request(getUserByIdQuery, { id });
-        user = result.getUserById;
+        const result = useGetUserById(id)
+        user = result.data.getUserById;
     } catch (err) {
         console.error('Error fetching user:', err);
         error = 'Failed to load user profile';

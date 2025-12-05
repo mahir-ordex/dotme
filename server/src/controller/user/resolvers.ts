@@ -58,7 +58,7 @@ const resolvers = {
             }
             return context.user;
         },
-        getUserByIdQuery: async (parent: any, { id }: { id: string }, context: graphQLContext) => {
+        getUserById: async (parent: any, { id }: { id: string }, context: graphQLContext) => {
             const user = await prisma.user.findUnique({
                 where: {
                     id: id

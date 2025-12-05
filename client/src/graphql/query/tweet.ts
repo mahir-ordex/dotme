@@ -1,4 +1,4 @@
-import { graphql } from '@/gql'
+import { graphql } from '../../gql/gql'
 
 export const getAllTweetsQuery = graphql(`
     query getAllTweets{

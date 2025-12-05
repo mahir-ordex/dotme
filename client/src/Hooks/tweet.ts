@@ -1,8 +1,8 @@
 
 import { createTweetMutation } from './../graphql/mutation/tweet';
-import { CreateTweetInput } from '@/gql/graphql';
+import { CreateTweetInput } from '../gql/graphql';
 import { graphQLClient } from '../client/api';
-import { getAllTweetsQuery } from "@/graphql/query/tweet";
+import { getAllTweetsQuery } from "../graphql/query/tweet";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { RequestDocument } from 'graphql-request';
 export const useGetAllTweet = () => {

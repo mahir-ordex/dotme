@@ -5,8 +5,8 @@ import TweetComposer from './components/TweetComposer';
 import { redirect } from 'next/navigation';
 import { cookies } from "next/headers";
 import { GraphQLClient } from "graphql-request";
-import { getCurrentUserQuery } from "@/graphql/query/user";
-import { getAllTweetsQuery } from "@/graphql/query/tweet";
+import { getCurrentUserQuery } from "../graphql/query/user";
+import { getAllTweetsQuery } from "../graphql/query/tweet";
 
 export default async function Home() {
   const cookieStore = cookies();

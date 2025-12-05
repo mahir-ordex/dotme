@@ -1,4 +1,8 @@
 import { prisma } from "../../utils/prismaClient.js";
+import {S3Client, PutObjectCommand} from '@aws-sdk/client-s3';
+import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
+import type { graphQLContext } from "../../interfaces.js";
+
 
 interface CreateTweetPayload {
     content: string,
@@ -13,6 +17,14 @@ interface GraphQLContext {
         lastName?: string;
     };
 }
+
+const s3Client = new S3Client({
+    credentials:{
+        accessKeyId: process.env.AWS_ACCESS_KEY_ID!,
+        secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY!
+    },
+    region: process.env.AWS_REGION || 'asia-south-1' //(mumbai)
+})
 
 
 const mutations = {
@@ -57,8 +69,23 @@ const queries = {
             throw new Error('Failed to fetch tweets');
         }
     },
-    getPresignUrl: async (parent: any, { imageType, imageName }: { imageType: string; imageName: string }) => {
-         
+    getPresignUrl: async (parent: any, { imageType, imageName }: { imageType: string; imageName: string },ctx :graphQLContext) => {
+        if(!ctx.user){
+            throw new Error("Please authenticate first");
+        }
+        const allowedImageTypes = ['image/jpg','image/jpeg', 'image/png', 'image/gif'];
+
+        if (!allowedImageTypes.includes(imageType)) {
+            throw new Error("Invalid image type");
+        }
+
+        const command = new PutObjectCommand({
+            Bucket: process.env.S3_BUCKET_NAME!,
+            Key: `content-images/${imageName}-${Date.now()}/${ctx.user?.id}.${imageType.split('/')[1]}`,
+            ContentType: imageType
+        });
+        const presignUrl = await getSignedUrl(s3Client, command, { expiresIn: 3600 });
+        return presignUrl;    
     }
 };
 

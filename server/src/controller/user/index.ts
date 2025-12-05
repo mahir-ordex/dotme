@@ -7,6 +7,6 @@ export const User = {
     types,
     resolvers: {
         ...resolvers,
-        User: extraResolvers  // Add User type resolver
+        User: extraResolvers
     }
 };

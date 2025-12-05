@@ -7,7 +7,7 @@ export const verifyGoogleTokenQuery = graphql(`
 `)
 
 export const getCurrentUserQuery = graphql(`
-  query GetCurrentUser {
+  query getCurrentUserQuery {
     getCurrentUser {
       id
       email

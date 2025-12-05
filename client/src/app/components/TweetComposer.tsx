@@ -1,8 +1,8 @@
 "use client"
-import { graphQLClient } from "@/client/api";
-import { getPresignUrlQuery } from "@/graphql/query/tweet";
-import { createTweet } from "@/Hooks/tweet";
-// import { getCurrentUser } from "@/Hooks/user"
+import { graphQLClient } from "../../client/api";
+import { getPresignUrlQuery } from "../../graphql/query/tweet";
+import { createTweet } from "../../Hooks/tweet";
+import { getCurrentUser } from "../../Hooks/user"
 import { useState } from "react";
 
 const TweetComposer = ({user}:any) => {
@@ -58,6 +58,27 @@ const TweetComposer = ({user}:any) => {
     }
   
     // Fixed tweet creation handler
+
+    const handleCreateTweet = async () => {
+      setIsUploading(true);
+      try {
+        let imageUrl = null;
+        if (selectedImage) {
+          imageUrl = await handleUploadToS3(selectedImage);
+        }
+        mutate({
+          content,
+          imageUrl
+        });
+        setContent('');
+        setSelectedImage(null);
+      } catch (error) {
+        console.error("Error creating tweet:", error);
+      } finally {
+        setIsUploading(false);
+      }
+
+    };
   
   
     // Fixed image selection handler

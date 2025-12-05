@@ -2,7 +2,7 @@ import {
   useQuery,
 } from '@tanstack/react-query'
 import { GraphQLClient } from 'graphql-request'
-import { getCurrentUserQuery, getUserByIdQuery } from '@/graphql/query/user';
+import { getCurrentUserQuery, getUserByIdQuery } from '../graphql/query/user';
 
 export const getCurrentUser = () => {
     const query = useQuery({
@@ -22,7 +22,7 @@ export const getCurrentUser = () => {
                 }
             });
             
-            const result = await client.request(getCurrentUserQuery);
+            const result = await client.request(getCurrentUserQuery as any);
             console.log("GraphQL response:", result);
             
             return result.getCurrentUser;
@@ -51,7 +51,7 @@ export const useGetUserById = (id: string) => {
                 }
             });
             
-            const result = await client.request(getUserByIdQuery, { id });
+            const result = await client.request(getUserByIdQuery as any, { id });
             return result;
         },
         enabled: !!id && typeof window !== 'undefined' && !!localStorage.getItem('token'),
