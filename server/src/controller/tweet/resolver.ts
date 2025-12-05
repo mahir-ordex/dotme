@@ -1,9 +1,9 @@
 import { prisma } from "../../utils/prismaClient.js";
 
 interface CreateTweetPayload {
-    content: string;
-    imageUrl?: string;
-}
+    content: string,
+    imageUrl?: string
+};
 
 interface GraphQLContext {
     user?: {
@@ -13,6 +13,7 @@ interface GraphQLContext {
         lastName?: string;
     };
 }
+
 
 const mutations = {
     createTweet: async (parent: any, { payload }: { payload: CreateTweetPayload }, ctx: GraphQLContext) => {
@@ -55,6 +56,9 @@ const queries = {
             console.error('Error fetching tweets:', error);
             throw new Error('Failed to fetch tweets');
         }
+    },
+    getPresignUrl: async (parent: any, { imageType, imageName }: { imageType: string; imageName: string }) => {
+         
     }
 };
 
