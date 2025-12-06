@@ -9,7 +9,7 @@ const TweetComposer = ({user}:any) => {
     const [content,setContent] = useState<string>('');
     const [selectedImage,setSelectedImage] = useState<File | null>(null);
     const [isUploading,setIsUploading] = useState<boolean>(false);
-    const { mutate } = createTweet();
+    const { mutateAsync } = createTweet();
     const queryClient = useQueryClient();
   
     // Fixed S3 upload function
@@ -66,7 +66,7 @@ const TweetComposer = ({user}:any) => {
         if (selectedImage) {
           imageUrl = await handleUploadToS3(selectedImage);
         }
-        mutate({
+        await mutateAsync({
           content,
           imageUrl
         });

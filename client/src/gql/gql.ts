@@ -15,6 +15,8 @@ import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/
  */
 type Documents = {
     "\n    mutation CreateTweet($payload: CreateTweetInput!){\n        createTweet(payload: $payload){\n            id\n        }\n    }\n": typeof types.CreateTweetDocument,
+    "\n    mutation FollowUser($to: String) {\n  followUser(to: $to)\n}": typeof types.FollowUserDocument,
+    "\n    mutation UnfollowUser($to: String) {\n  unfollowUser(to: $to)\n}\n": typeof types.UnfollowUserDocument,
     "\n    query getAllTweets{\n    getAllTweets{\n    id\n    content\n    imageUrl\n    createdAt\n    author{\n    id\n    firstName\n    lastName\n    profileImage\n    }\n    }\n    }\n  \n": typeof types.GetAllTweetsDocument,
     "\n  query GetPresignUrl($imageType: String!, $imageName: String!) {\n    getPresignUrl(imageType: $imageType, imageName: $imageName)\n  }\n": typeof types.GetPresignUrlDocument,
     "\n  query VerifyGoogleToken($token: String!) {\n    verifyGoogleToken(token: $token)\n  }\n": typeof types.VerifyGoogleTokenDocument,
@@ -23,6 +25,8 @@ type Documents = {
 };
 const documents: Documents = {
     "\n    mutation CreateTweet($payload: CreateTweetInput!){\n        createTweet(payload: $payload){\n            id\n        }\n    }\n": types.CreateTweetDocument,
+    "\n    mutation FollowUser($to: String) {\n  followUser(to: $to)\n}": types.FollowUserDocument,
+    "\n    mutation UnfollowUser($to: String) {\n  unfollowUser(to: $to)\n}\n": types.UnfollowUserDocument,
     "\n    query getAllTweets{\n    getAllTweets{\n    id\n    content\n    imageUrl\n    createdAt\n    author{\n    id\n    firstName\n    lastName\n    profileImage\n    }\n    }\n    }\n  \n": types.GetAllTweetsDocument,
     "\n  query GetPresignUrl($imageType: String!, $imageName: String!) {\n    getPresignUrl(imageType: $imageType, imageName: $imageName)\n  }\n": types.GetPresignUrlDocument,
     "\n  query VerifyGoogleToken($token: String!) {\n    verifyGoogleToken(token: $token)\n  }\n": types.VerifyGoogleTokenDocument,
@@ -48,6 +52,14 @@ export function graphql(source: string): unknown;
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(source: "\n    mutation CreateTweet($payload: CreateTweetInput!){\n        createTweet(payload: $payload){\n            id\n        }\n    }\n"): (typeof documents)["\n    mutation CreateTweet($payload: CreateTweetInput!){\n        createTweet(payload: $payload){\n            id\n        }\n    }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n    mutation FollowUser($to: String) {\n  followUser(to: $to)\n}"): (typeof documents)["\n    mutation FollowUser($to: String) {\n  followUser(to: $to)\n}"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n    mutation UnfollowUser($to: String) {\n  unfollowUser(to: $to)\n}\n"): (typeof documents)["\n    mutation UnfollowUser($to: String) {\n  unfollowUser(to: $to)\n}\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

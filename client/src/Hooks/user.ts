@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
-import { GraphQLClient } from 'graphql-request'
-import { getCurrentUserQuery, getUserByIdQuery } from '../graphql/query/user';
+import { getUserByIdQuery } from '../graphql/query/user';
+import { graphQLClient } from '../client/api';
 
 export const useGetUserById = (id: string) => {
     const query = useQuery({
@@ -11,14 +11,9 @@ export const useGetUserById = (id: string) => {
                 throw new Error('No authentication token');
             }
             
-            const client = new GraphQLClient('http://localhost:8000/graphql', {
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                }
-            });
+
             
-            const result = await client.request(getUserByIdQuery as any, { id });
+            const result = await graphQLClient.request(getUserByIdQuery as any, { id });
             return result;
         },
         enabled: !!id && typeof window !== 'undefined' && !!localStorage.getItem('token'),

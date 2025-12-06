@@ -3,7 +3,7 @@ import { use, useCallback } from 'react';
 import type { RequestDocument } from 'graphql-request';
 import { graphQLClient } from '../../../client/api';
 import { GoogleLogin } from '@react-oauth/google';
-import { verifyGoogleTokenQuery } from '@/graphql/query/user';
+import { verifyGoogleTokenQuery } from '../../../graphql/query/user';
 import { useQueryClient } from '@tanstack/react-query';
 
 export default function Login() {
@@ -19,7 +19,6 @@ export default function Login() {
                 return;
             }
             window.localStorage.setItem('token', verifyGoogleToken);
-            await queryClient.invalidateQueries(['current-user']);
             window.location.href = '/'; 
     } catch (error) {
         console.error('Error during login:', error);

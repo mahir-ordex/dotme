@@ -1,8 +1,10 @@
+import { follow } from './../../../node_modules/.prisma/client/index.d';
 import axios from "axios";
 import { prisma } from "../../utils/prismaClient.js";
 import JwtServices from "../../utils/jwtServices.js";
 import type { graphQLContext } from "../../interfaces.js";
 import type { User } from "@prisma/client";
+import { UserServices } from "../../utils/userServices.js";
 
 const resolvers = {
     Query: {
@@ -66,6 +68,21 @@ const resolvers = {
             });
             return user;
         }
+    },
+    Mutation:{
+        followUser: async(parent:any,{to}:{to: string},ctx:graphQLContext) => {
+            if(!ctx.user || !ctx.user.id) throw new Error("Unauthenticated")
+
+            await UserServices.followUser(ctx.user.id, to);
+            return true
+        },
+        unfollowUser:  async(parent:any,{to}:{to: string},ctx:graphQLContext) => {
+            if(!ctx.user || !ctx.user.id) throw new Error("Unauthenticated");
+
+            await UserServices.unfollowUser(ctx.user.id,to);
+            return true;
+        }
+
     }
 };
 
@@ -76,6 +93,28 @@ const extraResolvers = {
                 authorId: parent.id
             }
         });
+    },
+    follower: async(parent: User) => {
+        const followRelations = await prisma.follow.findMany({
+            where: {
+                followingId: parent.id
+            },
+            include: {
+                follower: true
+            }
+        });
+        return followRelations.map(relation => relation.follower);
+    },
+    following: async(parent: User) => {
+        const followRelations = await prisma.follow.findMany({
+            where: {
+                followerId: parent.id
+            },
+            include: {
+                following: true
+            }
+        });
+        return followRelations.map(relation => relation.following);
     }
 };
 
