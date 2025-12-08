@@ -1,10 +1,8 @@
-import { GraphQLClient } from 'graphql-request';
 import { getUserByIdQuery } from '../../graphql/query/user';
-import { cookies } from 'next/headers';
-import { redirect } from 'next/navigation';
 import { FeedCard } from '../components/feedCart';
 import { ArrowLeft, Calendar, MapPin } from 'lucide-react';
 import Link from 'next/link';
+import { graphQLClient } from '../../client/api';
 
 interface ProfilePageProps {
   params: Promise<{
@@ -15,23 +13,9 @@ interface ProfilePageProps {
 export default async function ProfilePage({ params }: ProfilePageProps) {
   // Await params in Next.js 15
   const { id } = await params;
-  
-  const cookieStore = cookies();
-  const token = (await cookieStore).get('__twitter_token__')?.value;
-
-  if (!token) {
-    redirect('/login');
-  }
-
-  const client = new GraphQLClient('http://localhost:8000/graphql', {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
-
   try {
-    const result = await client.request(getUserByIdQuery as any, { id });
-    const user = result.getUserById;
+    const result = await graphQLClient.request(getUserByIdQuery as any, { id });
+    const user= result.getUserById;
     
     console.log('Fetched user:', user);
 
@@ -101,6 +85,7 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
                 <MapPin className="w-4 h-4" />
                 <span>India</span>
               </div>
+         
               <div className="flex items-center space-x-1">
                 <Calendar className="w-4 h-4" />
                 <span>Joined November 2024</span>
@@ -110,11 +95,11 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
             {/* Following/Followers */}
             <div className="flex space-x-6 text-sm">
               <div className="flex space-x-1">
-                <span className="font-bold text-white">123</span>
+                <span className="font-bold text-white">{user.following.length}</span>
                 <span className="text-gray-500">Following</span>
               </div>
               <div className="flex space-x-1">
-                <span className="font-bold text-white">456</span>
+                <span className="font-bold text-white">{user.follower.length}</span>
                 <span className="text-gray-500">Followers</span>
               </div>
             </div>
@@ -154,7 +139,7 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
                     }
                   };
                   return (
-                    <FeedCard key={tweet.id} tweet={tweetWithAuthor} />
+                    <FeedCard key={tweet.id} tweet={tweetWithAuthor}/>
                   );
                 })}
               </div>

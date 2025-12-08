@@ -1,3 +1,4 @@
+// d:\social-app\.Me\client\src\graphql\query\user.ts
 import { graphql } from '../../gql/gql'
 
 export const verifyGoogleTokenQuery = graphql(`
@@ -10,15 +11,27 @@ export const getCurrentUserQuery = graphql(`
   query getCurrentUserQuery {
     getCurrentUser {
       id
-      email
       firstName
       lastName
+      email
       profileImage
       tweets {
         id
         content
         imageUrl
         createdAt
+      }
+      follower {
+        id
+        firstName
+        lastName
+        profileImage
+      }
+      following {
+        id
+        firstName
+        lastName
+        profileImage
       }
     }
   }
@@ -37,6 +50,18 @@ export const getUserByIdQuery = graphql(`
         content
         imageUrl
         createdAt
+      }
+      follower {
+        id
+        firstName
+        lastName
+        profileImage
+      }
+      following {
+        id
+        firstName
+        lastName
+        profileImage
       }
     }
   }

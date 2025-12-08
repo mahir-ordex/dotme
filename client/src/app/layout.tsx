@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 };
 
 const clientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID!;
-console.log("Google Client ID:", clientId);
+console.log("Google Client ID:",clientId);
 
 export default function RootLayout({
     children,

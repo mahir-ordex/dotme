@@ -14,7 +14,7 @@ export const graphQLClient = new GraphQLClient(
                 const localToken = localStorage.getItem('token');
                 const cookieToken = document.cookie
                     .split('; ')
-                    .find(row => row.startsWith('__twitter_token__='))
+                    .find(row => row.startsWith('token'))
                     ?.split('=')[1];
 
                 const token = cookieToken || localToken;

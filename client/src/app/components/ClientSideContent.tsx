@@ -7,7 +7,6 @@ import { useGetAllTweet } from "../../Hooks/tweet";
 export default function ClientSideContent({ user }: { user: any }) {
   const [isMounted, setIsMounted] = useState(false);
   const { tweets, isLoading, error } = useGetAllTweet();
-
   useEffect(() => {
     setIsMounted(true);
   }, []);
@@ -50,7 +49,7 @@ export default function ClientSideContent({ user }: { user: any }) {
           </div>
         ) : (
           tweets.map((tweet: any) => (
-            <FeedCard key={tweet.id} tweet={tweet} />
+            <FeedCard key={tweet.id} tweet={tweet} user={user} />
           ))
         )}
       </div>

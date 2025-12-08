@@ -1,15 +1,15 @@
 "use client"
-import { Search, Bell, Mail, User, MoreHorizontal, Home as HomeIcon, Hash, Bookmark, Users, Zap } from 'lucide-react';
+import { Search, Bell, Mail, User as UserIcon, MoreHorizontal, Home as HomeIcon, Hash, Bookmark, Users, Zap } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
 type NavbarProps = {
     user: {
-        id?: string | null;
-        profileImage?: string | null;
-        firstName?: string | null;
-        lastName?: string | null;
-    };
+      profileImage: string;
+      lastName: string;
+      id : string,
+      firstName: string,
+    }
 };
 
 export const Navbar = ({ user }: NavbarProps) => {
@@ -23,7 +23,7 @@ export const Navbar = ({ user }: NavbarProps) => {
         { icon: Bookmark, label: "Bookmarks", href: "/bookmarks" },
         { icon: Users, label: "Communities", href: "/communities" },
         { icon: Zap, label: "Premium", href: "/premium" },
-        { icon: User, label: "Profile", href: user.id ? `/${user.id}` : "/profile" },
+        { icon: UserIcon, label: "Profile", href: user.id ? `/${user.id}` : "/profile" },
         { icon: MoreHorizontal, label: "More", href: "/more" }
     ];
 
@@ -92,7 +92,7 @@ export const Navbar = ({ user }: NavbarProps) => {
                     <Link href={user.id ? `/${user.id}` : "/profile"}>
                         <button className="flex items-center space-x-3 p-3 rounded-full hover:bg-gray-900 transition-colors w-full">
                             <img
-                                src={user.profileImage || "https://api.dicebear.com/7.x/avataaars/svg?seed=default"}
+                                src={user.profileImage || "https://api.dicebear.com/7.x/avataaars/svg?seed=default" || ""}
                                 alt="Profile"
                                 className="w-10 h-10 rounded-full"
                             />

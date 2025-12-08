@@ -29,7 +29,6 @@ const resolvers = {
                         email: data.email
                     }
                 });
-
                 if (!user) {
                     const newUser = await prisma.user.create({
                         data: {
@@ -41,7 +40,7 @@ const resolvers = {
                     });
 
                     jwtToken = await JwtServices.generateToken(newUser);
-                    res.cookie("token", jwtToken, { httpOnly: true });
+                    res.cookie("token", jwtToken);
                     return jwtToken;
                 }
                 jwtToken = await JwtServices.generateToken(user);
