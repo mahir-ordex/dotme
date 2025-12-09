@@ -5,6 +5,7 @@ import JwtServices from "../../utils/jwtServices.js";
 import type { graphQLContext } from "../../interfaces.js";
 import type { User } from "@prisma/client";
 import { UserServices } from "../../utils/userServices.js";
+import { client } from '../../utils/redisClient';
 
 const resolvers = {
     Query: {
@@ -53,18 +54,22 @@ const resolvers = {
             }
         },
         getCurrentUser: async (parent: any, args: any, context: any) => {
-            console.log('Context user:', context.user); // Debug log
             if (!context.user) {
                 return null;
             }
             return context.user;
         },
         getUserById: async (parent: any, { id }: { id: string }, context: graphQLContext) => {
+            const idUser =await client.get(`_ID_${id}`)
+            if(idUser){
+                return JSON.parse(idUser)
+            }
             const user = await prisma.user.findUnique({
                 where: {
                     id: id
                 }
             });
+            await client.setEx(`_ID_${id}`,(60*5),JSON.stringify(user))
             return user;
         }
     },

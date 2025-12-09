@@ -2,6 +2,7 @@ import { prisma } from "../../utils/prismaClient.js";
 import {S3Client, PutObjectCommand} from '@aws-sdk/client-s3';
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import type { graphQLContext } from "../../interfaces.js";
+import { client } from "../../utils/redisClient.js";
 
 
 interface CreateTweetPayload {
@@ -42,6 +43,7 @@ const mutations = {
                     author: true
                 }
             });
+            await client.del('ALL_TWEETS_')
             
             return tweet;
         } catch (error) {
@@ -53,6 +55,11 @@ const mutations = {
 
 const queries = {
     getAllTweets: async () => {
+       const allTweets = await client.get('ALL_TWEETS_')
+
+       if(allTweets){
+        return JSON.parse(allTweets)
+       }
         try {
             const tweets = await prisma.tweet.findMany({
                 include: {
@@ -62,6 +69,8 @@ const queries = {
                     createdAt: 'desc'
                 }
             });
+            await client.set('ALL_TWEETS_', JSON.stringify(tweets))
+             
             
             return tweets;
         } catch (error) {

@@ -1,4 +1,5 @@
 import { prisma } from "./prismaClient.js";
+import {client as redisClient} from '../utils/redisClient.js'
 
 export class UserServices {
     public static async followUser(followerId: string, followingId: string): Promise<void> {

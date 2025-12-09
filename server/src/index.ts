@@ -8,6 +8,7 @@ import cors from "cors";
 import JwtServices from "./utils/jwtServices.js"
 import { prisma } from './utils/prismaClient.js';
 import cookieParser from 'cookie-parser';
+import { connectWithRedis } from './utils/redisClient.js';
 
 async function startServer() {
   const app = express();
@@ -80,7 +81,10 @@ async function startServer() {
   }));
 
   const port = process.env.PORT || 8000;
-  app.listen(port, () => console.log(`Server running at http://localhost:${port}/graphql`));
+  app.listen(port, () => {
+    console.log(`Server running at http://localhost:${port}/graphql`)
+    connectWithRedis()
+});
 }
 
 startServer().catch(error => {
