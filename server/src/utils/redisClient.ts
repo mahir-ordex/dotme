@@ -16,7 +16,7 @@ export const connectWithRedis = async() => {
     
     await client.set('foo', 'bar');
     const result = await client.get('foo');
-    console.log(result)  // >>> bar
+    console.log(result)
 }
 
 
