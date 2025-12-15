@@ -1,3 +1,5 @@
+import { mutations } from './controller/user/mutation';
+import { Query } from './../../client/src/gql/graphql';
 import 'dotenv/config';
 import express from "express";
 import { expressMiddleware } from "@apollo/server/express4";
@@ -9,6 +11,7 @@ import JwtServices from "./utils/jwtServices.js"
 import { prisma } from './utils/prismaClient.js';
 import cookieParser from 'cookie-parser';
 import { connectWithRedis } from './utils/redisClient.js';
+import { Order } from './controller/order/index.js';
 
 async function startServer() {
   const app = express();
@@ -22,19 +25,24 @@ async function startServer() {
     type Mutation {
       ${Tweet.mutations}
       ${User.mutations}
+      ${Order.mutations}
     } 
     ${User.types}
     ${Tweet.types}
+    ${Order.typeDefs}
   `;
 
   const resolvers = {
     Query: {
       ...User.resolvers.Query,
-      ...(Tweet.resolvers as any).Query
+      ...(Tweet.resolvers as any).Query,
+      ...Order.resolvers
+
     },
     Mutation: {
       ...(Tweet.resolvers as any).Mutation,
-      ...(User.resolvers as any).Mutation
+      ...(User.resolvers as any).Mutation,
+
     },
     User: {
       ...User.resolvers.User
@@ -69,7 +77,7 @@ async function startServer() {
             const user = await prisma.user.findUnique({ 
               where: { id: userPayload.id }
             });
-            console.log('Context user:', user);
+            // console.log('Context user:', user);
             return { user, req, res };
           }
         } catch (error: any) {

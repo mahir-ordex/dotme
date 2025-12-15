@@ -1,7 +1,7 @@
 import { GraphQLClient } from 'graphql-request';
 
 export const graphQLClient = new GraphQLClient(
-    'http://localhost:8000/graphql',
+    process.env.NEXT_PUBLIC_API_URL,
     {
         credentials: 'include',
         headers: () => {
