@@ -21,7 +21,7 @@ class JwtServices{
     }
     public static async decodeToken(authToken:string){
         if (!authToken){return null}
-        console.log("auth token :",authToken)
+        // console.log("auth token :",authToken)
         return JWT.verify(authToken, JWTsecret) as JWTUser
     }
 }

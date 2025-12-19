@@ -22,4 +22,16 @@ export const typeDefs = `#graphql
         razorpayPaymentId: String
         createdAt: String!
     }
+
+    input PaymentVerifyInput {
+        order_id: String!
+        razorpay_payment_id: String!
+        razorpay_signature: String!
+        plan: String!
+    }
+
+    type PaymentVerifyResponse {
+        success: Boolean!
+        message: String!
+    }
 `;

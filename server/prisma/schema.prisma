@@ -4,21 +4,21 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url = env("DATABASE_URL")
+  url      = env("DATABASE_URL")
 }
 
-
 model User {
-  id           String   @id @default(cuid())
-  firstName    String
-  lastName     String?
-  profileImage String?
-  email        String   @unique
-  tweets       Tweet[]
-  follower follow[] @relation("follower")
-  following follow[] @relation("following")
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  id                   String                @id @default(cuid())
+  firstName            String
+  lastName             String?
+  profileImage         String?
+  email                String                @unique
+  createdAt            DateTime              @default(now())
+  updatedAt            DateTime              @updatedAt
+  premiumSubscriptions PremiumSubscription[]
+  tweets               Tweet[]
+  follower             follow[]              @relation("follower")
+  following            follow[]              @relation("following")
 }
 
 model Tweet {
@@ -28,14 +28,24 @@ model Tweet {
   authorId  String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  
   author    User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
 }
 
 model follow {
-  follower User @relation("follower",fields: [followerId], references: [id])
   followerId  String
-  following User @relation("following",fields: [followingId], references: [id])
   followingId String
+  follower    User   @relation("follower", fields: [followerId], references: [id])
+  following   User   @relation("following", fields: [followingId], references: [id])
+
   @@id([followerId, followingId])
+}
+
+model PremiumSubscription {
+  id        String   @id @default(cuid())
+  userId    String
+  plan      String
+  paymentId String
+  startDate DateTime @default(now())
+  endDate   DateTime
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }

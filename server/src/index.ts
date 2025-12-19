@@ -1,5 +1,3 @@
-import { mutations } from './controller/user/mutation';
-import { Query } from './../../client/src/gql/graphql';
 import 'dotenv/config';
 import express from "express";
 import { expressMiddleware } from "@apollo/server/express4";
@@ -20,6 +18,7 @@ async function startServer() {
     type Query {
       ${User.quereis}
       ${Tweet.queries}
+      ${Order.queries}
     }
     
     type Mutation {
@@ -29,19 +28,19 @@ async function startServer() {
     } 
     ${User.types}
     ${Tweet.types}
-    ${Order.typeDefs}
+    ${Order.types}
   `;
 
   const resolvers = {
     Query: {
       ...User.resolvers.Query,
       ...(Tweet.resolvers as any).Query,
-      ...Order.resolvers
 
     },
     Mutation: {
       ...(Tweet.resolvers as any).Mutation,
       ...(User.resolvers as any).Mutation,
+      ...(Order.resolvers)
 
     },
     User: {

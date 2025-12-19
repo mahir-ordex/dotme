@@ -3,6 +3,7 @@ import "./globals.css";
 import QueryProvider from './components/QueryProvider';
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
+import Script from "next/script";
 
 export const metadata: Metadata = {
     title: ".Me - Social App",
@@ -25,6 +26,10 @@ export default function RootLayout({
                         {children}
                     </QueryProvider>
                 </GoogleOAuthProvider>
+                <Script 
+                    src="https://checkout.razorpay.com/v1/checkout.js"
+                    strategy="lazyOnload"
+                />
             </body>
         </html>
     );

@@ -28,6 +28,7 @@ export default async function PremiumPage() {
         'Contribute to new feature development',
         'Support community events',
     ];
+    
 
     return (
         <div className="min-h-screen bg-black text-white">
