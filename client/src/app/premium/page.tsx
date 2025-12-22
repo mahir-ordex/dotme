@@ -14,13 +14,6 @@ export default async function PremiumPage() {
         redirect('/login');
     }
 
-    const premiumFeatures = [
-        { icon: Users, text: 'Support communities' },
-        { icon: Shield, text: 'Ad-free experience' },
-        { icon: Star, text: 'Exclusive premium content' },
-        { icon: TrendingUp, text: 'Early access to new features' },
-        { icon: Zap, text: 'Priority customer support' },
-    ];
 
     const donationBenefits = [
         'Support open-source development',
@@ -52,42 +45,6 @@ export default async function PremiumPage() {
                             <h2 className="text-3xl font-bold">Upgrade to Premium</h2>
                         </div>
                         <p className="text-gray-400">Unlock exclusive features and support our community</p>
-                    </div>
-
-                    {/* Premium Plan Card */}
-                    <div className="border-2 border-blue-500 rounded-2xl p-6 mb-6 bg-gradient-to-br from-blue-500/10 to-purple-500/10 relative overflow-hidden">
-                        <div className="absolute top-4 right-4 bg-blue-500 text-white px-3 py-1 rounded-full text-xs font-bold">
-                            Popular
-                        </div>
-
-                        <div className="flex items-center gap-3 mb-4">
-                            <div className="w-12 h-12 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 flex items-center justify-center">
-                                <Star className="w-6 h-6 text-white" />
-                            </div>
-                            <div>
-                                <h3 className="text-xl font-bold">Premium Feature</h3>
-                                <p className="text-2xl font-bold text-blue-400">₹10<span className="text-sm text-gray-400">/month</span></p>
-                            </div>
-                        </div>
-
-                        <div className="mb-6">
-                            <h4 className="text-base font-semibold mb-3 flex items-center gap-2">
-                                <Check className="w-5 h-5 text-green-500" />
-                                What you get
-                            </h4>
-                            <ul className="space-y-3">
-                                {premiumFeatures.map((item, idx) => (
-                                    <li key={idx} className="flex items-center gap-3 text-gray-300 text-sm">
-                                        <div className="w-8 h-8 rounded-full bg-blue-500/20 flex items-center justify-center flex-shrink-0">
-                                            <item.icon className="w-4 h-4 text-blue-400" />
-                                        </div>
-                                        <span>{item.text}</span>
-                                    </li>
-                                ))}
-                            </ul>
-                        </div>
-
-                        <PremiumClientActions type="subscribe" />
                     </div>
 
                     {/* Donation Card */}
