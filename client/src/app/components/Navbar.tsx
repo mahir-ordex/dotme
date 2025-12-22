@@ -18,13 +18,13 @@ export const Navbar = ({ user }: NavbarProps) => {
     const menuItems = [
         { icon: HomeIcon, label: "Home", href: "/" },
         { icon: Search, label: "Explore", href: "/explore" },
-        { icon: Bell, label: "Notifications", href: "/notifications" },
-        { icon: Mail, label: "Messages", href: "/messages" },
-        { icon: Bookmark, label: "Bookmarks", href: "/bookmarks" },
-        { icon: Users, label: "Communities", href: "/communities" },
+        // { icon: Bell, label: "Notifications", href: "/notifications" },
+        // { icon: Mail, label: "Messages", href: "/messages" },
+        // { icon: Bookmark, label: "Bookmarks", href: "/bookmarks" },
+        // { icon: Users, label: "Communities", href: "/communities" },
         { icon: Zap, label: "Premium", href: "/premium" },
         { icon: UserIcon, label: "Profile", href: user.id ? `/${user.id}` : "/profile" },
-        { icon: MoreHorizontal, label: "More", href: "/more" }
+        // { icon: MoreHorizontal, label: "More", href: "/more" }   
     ];
 
     return (
