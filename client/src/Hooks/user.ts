@@ -1,7 +1,7 @@
 // d:\social-app\.Me\client\src\Hooks\user.ts
 import { mutations } from './../../../server/src/controller/user/mutation';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query' // ✅ Import useQueryClient
-import { getCurrentUserQuery, getUserByIdQuery } from '../graphql/query/user';
+import { getAllUserQuery, getCurrentUserQuery, getUserByIdQuery } from '../graphql/query/user';
 import { graphQLClient } from '../client/api';
 import { followUserMutation, unFollowUserMutation } from '../graphql/mutation/user';
 import { RequestDocument } from 'graphql-request';
@@ -75,4 +75,17 @@ export const useUnFollowUser = () => {
         }
     })
     return mutation
+}
+
+export const useGetAllUser = (search:string) =>{
+    const query = useQuery({
+        queryKey: ['getAllUser', search],
+        queryFn: async () => {
+            console.log("hook search ::   :: : : :",search)
+            let result  = await graphQLClient.request(getAllUserQuery as any, { search });
+            return result
+        },
+        enabled: !!search,
+    })
+    return {...query,data:query.data}
 }

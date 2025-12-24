@@ -22,6 +22,7 @@ type Documents = {
     "\n  query VerifyGoogleToken($token: String!) {\n    verifyGoogleToken(token: $token)\n  }\n": typeof types.VerifyGoogleTokenDocument,
     "\n  query getCurrentUserQuery {\n    getCurrentUser {\n      id\n      firstName\n      lastName\n      email\n      profileImage\n      tweets {\n        id\n        content\n        imageUrl\n        createdAt\n      }\n      follower {\n        id\n        firstName\n        lastName\n        profileImage\n      }\n      following {\n        id\n        firstName\n        lastName\n        profileImage\n      }\n    }\n  }\n": typeof types.GetCurrentUserQueryDocument,
     "\n  query GetUserById($id: String!) {\n    getUserById(id: $id) {\n      id\n      email\n      firstName\n      lastName\n      profileImage\n      tweets {\n        id\n        content\n        imageUrl\n        createdAt\n      }\n      follower {\n        id\n        firstName\n        lastName\n        profileImage\n      }\n      following {\n        id\n        firstName\n        lastName\n        profileImage\n      }\n    }\n  }\n": typeof types.GetUserByIdDocument,
+    "\n  query getAllUser($search: String!) {\n    getAllUser(search: $search) {\n      firstName\n      id\n      lastName\n      profileImage\n    }\n  }\n": typeof types.GetAllUserDocument,
 };
 const documents: Documents = {
     "\n    mutation CreateTweet($payload: CreateTweetInput!){\n        createTweet(payload: $payload){\n            id\n        }\n    }\n": types.CreateTweetDocument,
@@ -32,6 +33,7 @@ const documents: Documents = {
     "\n  query VerifyGoogleToken($token: String!) {\n    verifyGoogleToken(token: $token)\n  }\n": types.VerifyGoogleTokenDocument,
     "\n  query getCurrentUserQuery {\n    getCurrentUser {\n      id\n      firstName\n      lastName\n      email\n      profileImage\n      tweets {\n        id\n        content\n        imageUrl\n        createdAt\n      }\n      follower {\n        id\n        firstName\n        lastName\n        profileImage\n      }\n      following {\n        id\n        firstName\n        lastName\n        profileImage\n      }\n    }\n  }\n": types.GetCurrentUserQueryDocument,
     "\n  query GetUserById($id: String!) {\n    getUserById(id: $id) {\n      id\n      email\n      firstName\n      lastName\n      profileImage\n      tweets {\n        id\n        content\n        imageUrl\n        createdAt\n      }\n      follower {\n        id\n        firstName\n        lastName\n        profileImage\n      }\n      following {\n        id\n        firstName\n        lastName\n        profileImage\n      }\n    }\n  }\n": types.GetUserByIdDocument,
+    "\n  query getAllUser($search: String!) {\n    getAllUser(search: $search) {\n      firstName\n      id\n      lastName\n      profileImage\n    }\n  }\n": types.GetAllUserDocument,
 };
 
 /**
@@ -80,6 +82,10 @@ export function graphql(source: "\n  query getCurrentUserQuery {\n    getCurrent
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(source: "\n  query GetUserById($id: String!) {\n    getUserById(id: $id) {\n      id\n      email\n      firstName\n      lastName\n      profileImage\n      tweets {\n        id\n        content\n        imageUrl\n        createdAt\n      }\n      follower {\n        id\n        firstName\n        lastName\n        profileImage\n      }\n      following {\n        id\n        firstName\n        lastName\n        profileImage\n      }\n    }\n  }\n"): (typeof documents)["\n  query GetUserById($id: String!) {\n    getUserById(id: $id) {\n      id\n      email\n      firstName\n      lastName\n      profileImage\n      tweets {\n        id\n        content\n        imageUrl\n        createdAt\n      }\n      follower {\n        id\n        firstName\n        lastName\n        profileImage\n      }\n      following {\n        id\n        firstName\n        lastName\n        profileImage\n      }\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  query getAllUser($search: String!) {\n    getAllUser(search: $search) {\n      firstName\n      id\n      lastName\n      profileImage\n    }\n  }\n"): (typeof documents)["\n  query getAllUser($search: String!) {\n    getAllUser(search: $search) {\n      firstName\n      id\n      lastName\n      profileImage\n    }\n  }\n"];
 
 export function graphql(source: string) {
   return (documents as any)[source] ?? {};

@@ -66,3 +66,14 @@ export const getUserByIdQuery = graphql(`
     }
   }
 `)
+
+export const getAllUserQuery = graphql(`
+  query getAllUser($search: String!) {
+    getAllUser(search: $search) {
+      firstName
+      id
+      lastName
+      profileImage
+    }
+  }
+`)

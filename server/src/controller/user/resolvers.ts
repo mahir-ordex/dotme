@@ -45,8 +45,8 @@ const resolvers = {
                     return jwtToken;
                 }
                 jwtToken = await JwtServices.generateToken(user);
-                    res.cookie("token", jwtToken, { httpOnly: true });
-                    return jwtToken;
+                res.cookie("token", jwtToken, { httpOnly: true });
+                return jwtToken;
 
             } catch (e: any) {
                 console.log("error :", e)
@@ -60,8 +60,8 @@ const resolvers = {
             return context.user;
         },
         getUserById: async (parent: any, { id }: { id: string }, context: graphQLContext) => {
-            const idUser =await client.get(`_ID_${id}`)
-            if(idUser){
+            const idUser = await client.get(`_ID_${id}`)
+            if (idUser) {
                 return JSON.parse(idUser)
             }
             const user = await prisma.user.findUnique({
@@ -69,21 +69,53 @@ const resolvers = {
                     id: id
                 }
             });
-            await client.setEx(`_ID_${id}`,(60*5),JSON.stringify(user))
+            await client.setEx(`_ID_${id}`, (60 * 15), JSON.stringify(user))
             return user;
+        },
+        getAllUser: async (parent: any, { search }: { search: string }, ctx: graphQLContext) => {
+            try {
+                if (!ctx || !ctx.user) {
+                    throw new Error("Unauthenticated!");
+                }
+                console.log("backend search :",search)
+
+                const allUser = await prisma.user.findMany({
+                    where: {
+                        OR: [
+                            {
+                                firstName: {
+                                    contains: search,
+                                    mode: "insensitive"
+                                }
+                            },
+                            {
+                                lastName: {
+                                    contains: search,
+                                    mode: "insensitive"
+                                }
+                            }
+                        ]
+                    }
+                });
+                return allUser;
+            } catch (e: any) {
+                console.error(e)
+                throw new Error(`${e.message}`)
+            }
+
         }
     },
-    Mutation:{
-        followUser: async(parent:any,{to}:{to: string},ctx:graphQLContext) => {
-            if(!ctx.user || !ctx.user.id) throw new Error("Unauthenticated")
+    Mutation: {
+        followUser: async (parent: any, { to }: { to: string }, ctx: graphQLContext) => {
+            if (!ctx.user || !ctx.user.id) throw new Error("Unauthenticated")
 
             await UserServices.followUser(ctx.user.id, to);
             return true
         },
-        unfollowUser:  async(parent:any,{to}:{to: string},ctx:graphQLContext) => {
-            if(!ctx.user || !ctx.user.id) throw new Error("Unauthenticated");
+        unfollowUser: async (parent: any, { to }: { to: string }, ctx: graphQLContext) => {
+            if (!ctx.user || !ctx.user.id) throw new Error("Unauthenticated");
 
-            await UserServices.unfollowUser(ctx.user.id,to);
+            await UserServices.unfollowUser(ctx.user.id, to);
             return true;
         }
 
@@ -98,7 +130,7 @@ const extraResolvers = {
             }
         });
     },
-    follower: async(parent: User) => {
+    follower: async (parent: User) => {
         const followRelations = await prisma.follow.findMany({
             where: {
                 followingId: parent.id
@@ -109,7 +141,7 @@ const extraResolvers = {
         });
         return followRelations.map(relation => relation.follower);
     },
-    following: async(parent: User) => {
+    following: async (parent: User) => {
         const followRelations = await prisma.follow.findMany({
             where: {
                 followerId: parent.id
