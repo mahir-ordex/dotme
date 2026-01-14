@@ -13,6 +13,8 @@ import { Order } from './controller/order/index.js';
 
 async function startServer() {
   const app = express();
+  // Import upload router
+  const uploadRouter = (await import('./controller/upload/index.js')).default;
 
   const typeDefs = `#graphql
     type Query {
@@ -57,12 +59,15 @@ async function startServer() {
   await server.start();
 
   app.use(cors({
-    origin: "http://localhost:3000",
+    origin: ["http://localhost:3000",""], // or your frontend URL
     credentials: true
   }));
 
   app.use(cookieParser());
   app.use(express.json());
+
+  // Register upload REST endpoint
+  app.use('/api/upload', uploadRouter);
 
   app.use("/graphql", express.json(), expressMiddleware(server, {
     context: async ({ req , res}) => {

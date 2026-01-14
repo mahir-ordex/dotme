@@ -5,6 +5,7 @@ import { getAllTweetsQuery } from "../graphql/query/tweet";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { RequestDocument } from 'graphql-request';
 
+
 export const useGetAllTweet = () => {
     const query = useQuery({
         queryKey: ['all-tweet'],

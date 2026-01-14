@@ -2,6 +2,8 @@
 import { Search, Bell, Mail, User as UserIcon, MoreHorizontal, Home as HomeIcon, Hash, Bookmark, Users, Zap } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import Post from './post'
+import { useState } from 'react';
 
 type NavbarProps = {
     user: {
@@ -14,6 +16,7 @@ type NavbarProps = {
 
 export const Navbar = ({ user }: NavbarProps) => {
     const pathname = usePathname();
+    const [showPostModel, setShowPostModel] = useState(false);
 
     const menuItems = [
         { icon: HomeIcon, label: "Home", href: "/" },
@@ -29,6 +32,21 @@ export const Navbar = ({ user }: NavbarProps) => {
 
     return (
         <>
+            {/* Overlay for Post Modal */}
+            {/* {showPostModel && ( */}
+                { showPostModel && (
+                    <div className="fixed inset-0 bg-black bg-opacity-80 z-[9998] transition-opacity">
+                    <div className="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-[9999]">
+                        <Post
+                            userImage={user.profileImage || "https://api.dicebear.com/7.x/avataaars/svg?seed=default"}
+                            homeComponent={true}
+                            onClose={() => setShowPostModel(false)}
+                        />
+                    </div>
+                    </div>
+                )}
+            {/* )} */}
+
             {/* Mobile Bottom Navigation */}
             <div className="md:hidden fixed bottom-0 left-0 right-0 bg-black border-t border-gray-800 z-50">
                 <div className="flex justify-around py-2">
@@ -79,7 +97,7 @@ export const Navbar = ({ user }: NavbarProps) => {
                     </nav>
 
                     {/* Post Button */}
-                    <button className="bg-[#1d9bf0] hover:bg-[#1a8cd8] w-full lg:w-auto lg:px-8 py-3 rounded-full font-bold text-white transition-colors mb-8">
+                    <button className="bg-[#1d9bf0] hover:bg-[#1a8cd8] w-full lg:w-auto lg:px-8 py-3 rounded-full font-bold text-white transition-colors mb-8" onClick={() => setShowPostModel(true)}>
                         <span className="hidden lg:block">Post</span>
                         <svg className="w-6 h-6 lg:hidden mx-auto" fill="currentColor" viewBox="0 0 24 24">
                             <path d="M8.8 7.2H5.6V3.9c0-.4-.3-.8-.8-.8s-.7.4-.7.8v3.3H.8c-.4 0-.8.3-.8.8s.3.8.8.8h3.3v3.3c0 .4.3.8.8.8s.8-.3.8-.8V8.7H8.8c.4 0 .8-.3.8-.8s-.4-.7-.8-.7z"></path>
@@ -92,7 +110,7 @@ export const Navbar = ({ user }: NavbarProps) => {
                     <Link href={user.id ? `/${user.id}` : "/profile"}>
                         <button className="flex items-center space-x-3 p-3 rounded-full hover:bg-gray-900 transition-colors w-full">
                             <img
-                                src={user.profileImage || "https://api.dicebear.com/7.x/avataaars/svg?seed=default" || ""}
+                                src={user.profileImage ? user.profileImage : "https://api.dicebear.com/7.x/avataaars/svg?seed=default"}
                                 alt="Profile"
                                 className="w-10 h-10 rounded-full"
                             />
@@ -108,6 +126,7 @@ export const Navbar = ({ user }: NavbarProps) => {
                         </button>
                     </Link>
                 </div>
+                
             </div>
         </>
     );

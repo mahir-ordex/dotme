@@ -30,6 +30,9 @@ export class UserServices {
                 }
             }
         });
+        await redisClient.del(`_ID_${followingId}`);
+        console.log(`Cleared cache for user ID: ${followingId}`);
+        return;
     }
 
     public static async unfollowUser(followerId: string, followingId: string): Promise<void> {
@@ -56,5 +59,8 @@ export class UserServices {
                 }
             }
         });
+        await redisClient.del(`_ID_${followingId}`);
+        console.log(`Cleared cache for user ID: ${followingId}`);
+        return;
     }
 }

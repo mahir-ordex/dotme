@@ -227,7 +227,7 @@ mutation CreateTweet($payload: CreateTweetInput!) {
 ```graphql
 input CreateTweetInput {
   content: String!
-  imageUrl: String
+  imageUrl: String[]
 }
 ```
 

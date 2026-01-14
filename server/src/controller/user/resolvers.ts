@@ -1,4 +1,4 @@
-import { follow } from './../../../node_modules/.prisma/client/index.d';
+// import { follow } from './../../../node_modules/.prisma/client/index.d';
 import axios from "axios";
 import { prisma } from "../../utils/prismaClient.js";
 import JwtServices from "../../utils/jwtServices.js";
@@ -81,18 +81,25 @@ const resolvers = {
 
                 const allUser = await prisma.user.findMany({
                     where: {
-                        OR: [
+                        AND: [
                             {
-                                firstName: {
-                                    contains: search,
-                                    mode: "insensitive"
-                                }
+                                id: { not: ctx.user.id }
                             },
                             {
-                                lastName: {
-                                    contains: search,
-                                    mode: "insensitive"
-                                }
+                                OR: [
+                                    {
+                                        firstName: {
+                                            contains: search.toLocaleLowerCase(),
+                                            mode: "insensitive"
+                                        }
+                                    },
+                                    {
+                                        lastName: {
+                                            contains: search.toLocaleLowerCase(),
+                                            mode: "insensitive"
+                                        }
+                                    }
+                                ]
                             }
                         ]
                     }

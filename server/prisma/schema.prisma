@@ -1,5 +1,6 @@
 generator client {
-  provider = "prisma-client-js"
+  provider = "prisma-client"
+  output   = "../generated/prisma"
 }
 
 datasource db {
@@ -24,7 +25,7 @@ model User {
 model Tweet {
   id        String   @id @default(cuid())
   content   String
-  imageUrl  String?
+  imageUrl  String[] @default([])
   authorId  String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

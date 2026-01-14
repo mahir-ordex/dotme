@@ -18,7 +18,7 @@ export type Scalars = {
 
 export type CreateTweetInput = {
   content: Scalars['String']['input'];
-  imageUrl?: InputMaybe<Scalars['String']['input']>;
+  imageUrl?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
 };
 
 export type Mutation = {
@@ -133,7 +133,7 @@ export type Tweet = {
   content: Scalars['String']['output'];
   createdAt: Scalars['String']['output'];
   id: Scalars['ID']['output'];
-  imageUrl?: Maybe<Scalars['String']['output']>;
+  imageUrl?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
 };
 
 export type User = {
@@ -172,7 +172,7 @@ export type UnfollowUserMutation = { __typename?: 'Mutation', unfollowUser?: boo
 export type GetAllTweetsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetAllTweetsQuery = { __typename?: 'Query', getAllTweets?: Array<{ __typename?: 'Tweet', id: string, content: string, imageUrl?: string | null, createdAt: string, author: { __typename?: 'User', id: string, firstName: string, lastName?: string | null, profileImage?: string | null } } | null> | null };
+export type GetAllTweetsQuery = { __typename?: 'Query', getAllTweets?: Array<{ __typename?: 'Tweet', id: string, content: string, imageUrl?: Array<string | null> | null, createdAt: string, author: { __typename?: 'User', id: string, firstName: string, lastName?: string | null, profileImage?: string | null } } | null> | null };
 
 export type GetPresignUrlQueryVariables = Exact<{
   imageType: Scalars['String']['input'];
@@ -192,14 +192,14 @@ export type VerifyGoogleTokenQuery = { __typename?: 'Query', verifyGoogleToken?:
 export type GetCurrentUserQueryQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetCurrentUserQueryQuery = { __typename?: 'Query', getCurrentUser?: { __typename?: 'User', id: string, firstName: string, lastName?: string | null, email: string, profileImage?: string | null, tweets?: Array<{ __typename?: 'Tweet', id: string, content: string, imageUrl?: string | null, createdAt: string } | null> | null, follower?: Array<{ __typename?: 'User', id: string, firstName: string, lastName?: string | null, profileImage?: string | null } | null> | null, following?: Array<{ __typename?: 'User', id: string, firstName: string, lastName?: string | null, profileImage?: string | null } | null> | null } | null };
+export type GetCurrentUserQueryQuery = { __typename?: 'Query', getCurrentUser?: { __typename?: 'User', id: string, firstName: string, lastName?: string | null, email: string, profileImage?: string | null, tweets?: Array<{ __typename?: 'Tweet', id: string, content: string, imageUrl?: Array<string | null> | null, createdAt: string } | null> | null, follower?: Array<{ __typename?: 'User', id: string, firstName: string, lastName?: string | null, profileImage?: string | null } | null> | null, following?: Array<{ __typename?: 'User', id: string, firstName: string, lastName?: string | null, profileImage?: string | null } | null> | null } | null };
 
 export type GetUserByIdQueryVariables = Exact<{
   id: Scalars['String']['input'];
 }>;
 
 
-export type GetUserByIdQuery = { __typename?: 'Query', getUserById?: { __typename?: 'User', id: string, email: string, firstName: string, lastName?: string | null, profileImage?: string | null, tweets?: Array<{ __typename?: 'Tweet', id: string, content: string, imageUrl?: string | null, createdAt: string } | null> | null, follower?: Array<{ __typename?: 'User', id: string, firstName: string, lastName?: string | null, profileImage?: string | null } | null> | null, following?: Array<{ __typename?: 'User', id: string, firstName: string, lastName?: string | null, profileImage?: string | null } | null> | null } | null };
+export type GetUserByIdQuery = { __typename?: 'Query', getUserById?: { __typename?: 'User', id: string, email: string, firstName: string, lastName?: string | null, profileImage?: string | null, tweets?: Array<{ __typename?: 'Tweet', id: string, content: string, imageUrl?: Array<string | null> | null, createdAt: string } | null> | null, follower?: Array<{ __typename?: 'User', id: string, firstName: string, lastName?: string | null, profileImage?: string | null } | null> | null, following?: Array<{ __typename?: 'User', id: string, firstName: string, lastName?: string | null, profileImage?: string | null } | null> | null } | null };
 
 export type GetAllUserQueryVariables = Exact<{
   search: Scalars['String']['input'];

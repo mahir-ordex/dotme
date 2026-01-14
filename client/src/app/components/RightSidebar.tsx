@@ -14,40 +14,53 @@ export function RightSidebar() {
     { name: "React", username: "reactjs", avatar: "https://api.dicebear.com/7.x/initials/svg?seed=react" },
   ];
 
+  const pathName = typeof window !== 'undefined' ? window.location.pathname : '';
+
   return (
-    <div className="w-full space-y-4">
+    <div className="w-full space-y-4 px-2 md:px-0 w-96">
       {/* Search Bar */}
-      <div className="relative">
-        <div className="absolute inset-y-0 left-0 pl-4 flex items-center">
-          <Search className="h-5 w-5 text-gray-500" />
+      {pathName === '/explore' ? null : (
+        <div className="relative">
+          <div className="absolute inset-y-0 left-0 pl-4 flex items-center">
+            <Search className="h-5 w-5 text-gray-500" />
+          </div>
+          <input
+            className="w-full bg-gray-900 border border-gray-800 rounded-full py-3 pl-12 pr-4 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#1d9bf0] focus:border-transparent"
+            placeholder="Search Twitter"
+            type="text"
+            readOnly
+            aria-label="Search Twitter"
+          />
         </div>
-        <input
-          className="w-full bg-gray-900 border border-gray-800 rounded-full py-3 pl-12 pr-4 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#1d9bf0] focus:border-transparent"
-          placeholder="Search Twitter"
-          type="text"
-          readOnly
-        />
-      </div>
+      )}
 
       {/* What's happening */}
-      <div className="bg-gray-900 rounded-2xl p-4">
+      <div className="bg-gray-900 rounded-2xl p-4 -z-10 w-96">
         <h2 className="text-xl font-bold mb-3">What's happening</h2>
         <div className="space-y-3">
           {trendingTopics.map((trend, index) => (
-            <div key={index} className="hover:bg-gray-800 p-2 -mx-2 rounded cursor-pointer transition-colors">
+            <div
+              key={index}
+              className="hover:bg-gray-800 p-2 -mx-2 rounded cursor-pointer transition-colors"
+              tabIndex={0}
+              aria-label={`Trending topic: ${trend.topic}`}
+            >
               <div className="text-gray-500 text-[13px] leading-4">{trend.category}</div>
               <div className="font-bold text-[15px] leading-5">{trend.topic}</div>
               <div className="text-gray-500 text-[13px] leading-4">{trend.tweets}</div>
             </div>
           ))}
         </div>
-        <button className="text-[#1d9bf0] text-[15px] mt-3 hover:underline">
+        <button
+          className="text-[#1d9bf0] text-[15px] mt-3 hover:underline focus:outline-none focus:ring-2 focus:ring-[#1d9bf0] rounded"
+          aria-label="Show more trending topics"
+        >
           Show more
         </button>
       </div>
 
       {/* Who to follow */}
-      <div className="bg-gray-900 rounded-2xl p-4">
+      <div className="-z-10 bg-gray-900 rounded-2xl p-4 w-96">
         <h2 className="text-xl font-bold mb-3">Who to follow</h2>
         <div className="space-y-3">
           {suggestedUsers.map((suggestedUser, index) => (
@@ -63,26 +76,32 @@ export function RightSidebar() {
                   <div className="text-gray-500 text-[15px] leading-5">@{suggestedUser.username}</div>
                 </div>
               </div>
-              <button className="bg-white text-black font-bold py-1 px-4 rounded-full text-[14px] hover:bg-gray-200 transition-colors">
+              <button
+                className="bg-white text-black font-bold py-1 px-4 rounded-full text-[14px] hover:bg-gray-200 transition-colors focus:outline-none focus:ring-2 focus:ring-[#1d9bf0]"
+                aria-label={`Follow ${suggestedUser.name}`}
+              >
                 Follow
               </button>
             </div>
           ))}
         </div>
-        <button className="text-[#1d9bf0] text-[15px] mt-3 hover:underline">
+        <button
+          className="text-[#1d9bf0] text-[15px] mt-3 hover:underline focus:outline-none focus:ring-2 focus:ring-[#1d9bf0] rounded"
+          aria-label="Show more suggested users"
+        >
           Show more
         </button>
       </div>
 
       {/* Footer Links */}
-      <div className="px-2">
+      <div className="px-2 w-96">
         <div className="flex flex-wrap text-[13px] text-gray-500 leading-4">
-          <a href="#" className="hover:underline mr-3 mb-1">Terms of Service</a>
-          <a href="#" className="hover:underline mr-3 mb-1">Privacy Policy</a>
-          <a href="#" className="hover:underline mr-3 mb-1">Cookie Policy</a>
-          <a href="#" className="hover:underline mr-3 mb-1">Accessibility</a>
-          <a href="#" className="hover:underline mr-3 mb-1">Ads info</a>
-          <a href="#" className="hover:underline mr-3 mb-1">More</a>
+          <a href="javascript:void(0)" className="hover:underline mr-3 mb-1">Terms of Service</a>
+          <a href="javascript:void(0)" className="hover:underline mr-3 mb-1">Privacy Policy</a>
+          <a href="javascript:void(0)" className="hover:underline mr-3 mb-1">Cookie Policy</a>
+          <a href="javascript:void(0)" className="hover:underline mr-3 mb-1">Accessibility</a>
+          <a href="javascript:void(0)" className="hover:underline mr-3 mb-1">Ads info</a>
+          <a href="javascript:void(0)" className="hover:underline mr-3 mb-1">More</a>
         </div>
         <div className="text-[13px] text-gray-500 mt-2">© 2024 X Corp.</div>
       </div>
