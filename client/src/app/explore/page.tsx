@@ -4,6 +4,7 @@ import { Search } from "lucide-react";
 import { useGetAllUser, useGetCurrentUser } from "../../Hooks/user";
 import Link from "next/link";
 import XLayOut from "../components/xLayOut";
+import { FollowBtn } from "../components/FollowBtn";
 
 export default function ExplorePage() {
     const { data: currentUser, isLoading, error } = useGetCurrentUser();
@@ -62,8 +63,10 @@ export default function ExplorePage() {
                     ) : (
                         <ul className="flex-col m-auto">
                             {results.map((result, idx) => (
-                                <li key={idx} className="flex items-center bg-slate-950 rounded-lg p-4 text-white mb-2">
+                                <li key={idx} className="flex items-center justify-between bg-slate-950 rounded-lg p-4 text-white mb-2">
                                     <Link href={`/${result.id}`} className="flex items-center w-full">
+                                    <div>
+                                    </div>
                                         <img
                                             src={result.profileImage || 'https://api.dicebear.com/7.x/avataaars/svg?seed=default'}
                                             alt={result.name || "User profile"}
@@ -72,8 +75,11 @@ export default function ExplorePage() {
                                         <div>
                                             <p className="font-semibold">{result.firstName} {result.lastName}</p>
                                             <p className="text-gray-400 text-sm">{result.email}</p>
-                                        </div>
+                                        </div> 
                                     </Link>
+                                        <div>
+                                            <FollowBtn id={result.id}></FollowBtn>
+                                        </div>
                                 </li>
                             ))}
                         </ul>
