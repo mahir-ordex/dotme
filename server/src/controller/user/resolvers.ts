@@ -134,7 +134,11 @@ const extraResolvers = {
         return await prisma.tweet.findMany({
             where: {
                 authorId: parent.id
-            }
+            },
+            orderBy: {
+                createdAt: 'desc'
+            },
+            
         });
     },
     follower: async (parent: User) => {
