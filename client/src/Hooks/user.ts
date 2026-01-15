@@ -7,22 +7,15 @@ import { followUserMutation, unFollowUserMutation } from '../graphql/mutation/us
 import { RequestDocument } from 'graphql-request';
 
 export const useGetUserById = (id: string) => {
-    const query = useQuery({
-        queryKey:['id',id],
-        queryFn: async () => {
-            const token = localStorage.getItem('token');
-            if (!token) {
-                throw new Error('No authentication token');
-            }
-            
-            const result = await graphQLClient.request(getUserByIdQuery as any, { id });
-            return result;
-        },
-        enabled: !!id && typeof window !== 'undefined' && !!localStorage.getItem('token'),
-        retry: false,
-    })
-    return {...query, user: query.data?.getUserById}
-}
+  return useQuery({
+    queryKey: ['id', id],
+    queryFn: async () => {
+      const result = await graphQLClient.request(getUserByIdQuery as any, { id });
+      return result.getUserById;
+    },
+    enabled: !!id,
+  });
+};
 
 export const useGetCurrentUser = () => {
     const query = useQuery({
@@ -41,40 +34,48 @@ export const useFollowUser = () => {
     const queryClient = useQueryClient();
 
     const mutation = useMutation({
-        mutationFn: async(id: string) => {
-            return graphQLClient.request(followUserMutation as unknown as RequestDocument, {to: id})
+        mutationFn: async (id: string) => {
+            console.log('Mutation called with id:', id);
+            return graphQLClient.request(followUserMutation, { to: id });
         },
-        onSuccess: async () => {
-            console.log("Follow successful, invalidating cache...");
-            // Invalidate and refetch
-            await queryClient.invalidateQueries({ queryKey: ['current-user'] });
-            console.log("Successfully followed user!");
+        onSuccess: async (data, id) => {
+            console.log('Mutation success:', data);
+            await Promise.all([
+                queryClient.invalidateQueries({ queryKey: ['current-user'] }),
+                queryClient.invalidateQueries({ queryKey: ['id', id] })
+            ]);
         },
         onError: (error) => {
-            console.error("Error in Follow User:", error);
+            console.error('Mutation error:', error);
         }
-    })
-    return mutation
+    });
+    return mutation;
 }
 
 export const useUnFollowUser = () => {
-    const queryClient = useQueryClient(); // ✅ Get the REAL client from context
+    const queryClient = useQueryClient();
 
     const mutation = useMutation({
-        mutationFn: async(id: string) => {
-            return graphQLClient.request(unFollowUserMutation as unknown as RequestDocument, {to: id})
+        mutationFn: async (id: string) => {
+            const res = await graphQLClient.request(unFollowUserMutation, { to: id });
+            console.log('Mutation response:', res);
+            return res;
         },
-        onSuccess: async () => {
-            console.log("Unfollow successful, invalidating cache...");
-            // Invalidate and refetch
-            await queryClient.invalidateQueries({ queryKey: ['current-user'] });
-            console.log("Successfully unfollowed user!");
+        onSuccess: async (_data, id) => {
+            // Invalidate both current user and target user queries
+            console.log('Invalidating queries for current-user and id', id);
+            await Promise.all([
+                queryClient.invalidateQueries({ queryKey: ['current-user'] }),
+                queryClient.invalidateQueries({ queryKey: ['id', id] })
+            ]);
+            console.log('Successfully unfollowed user!');
         },
         onError: (error) => {
+            // Let UI handle error, but log for debugging
             console.error("Error in Unfollow User:", error);
         }
-    })
-    return mutation
+    });
+    return mutation;
 }
 
 export const useGetAllUser = (search:string) =>{

@@ -3,6 +3,8 @@ import { FeedCard } from '../components/feedCart';
 import { ArrowLeft, Calendar, MapPin } from 'lucide-react';
 import Link from 'next/link';
 import { graphQLClient } from '../../client/api';
+import { FollowBtn } from '../components/FollowBtn';
+import XLayOut from '../components/xLayOut';
 
 interface ProfilePageProps {
   params: Promise<{
@@ -14,8 +16,9 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
   // Await params in Next.js 15
   const { id } = await params;
   try {
-    const result = await graphQLClient.request(getUserByIdQuery as any, { id });
+    let result = await graphQLClient.request(getUserByIdQuery as any, { id });
     const user= result.getUserById;
+
     
     console.log('Fetched user:', user);
 
@@ -30,6 +33,7 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
     }
 
     return (
+      <XLayOut>
       <div className="min-h-screen bg-black text-white">
         <div className="max-w-[600px] mx-auto border-x border-gray-800">
           {/* Header with Back Button */}
@@ -57,9 +61,7 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
                   className="w-32 h-32 rounded-full border-4 border-black"
                 />
               </div>
-              <button className="border border-gray-300 text-white px-6 py-2 rounded-full font-bold hover:bg-gray-900 transition-colors mt-4">
-                Follow
-              </button>
+                <FollowBtn id={id}></FollowBtn>
             </div>
 
             {/* User Info */}
@@ -154,6 +156,7 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
           </div>
         </div>
       </div>
+      </XLayOut>
     );
   } catch (error) {
     console.error('Error fetching user:', error);
