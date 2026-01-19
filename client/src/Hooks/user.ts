@@ -1,9 +1,8 @@
 // d:\social-app\.Me\client\src\Hooks\user.ts
-import { mutations } from './../../../server/src/controller/user/mutation';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query' // ✅ Import useQueryClient
 import { getAllUserQuery, getCurrentUserQuery, getUserByIdQuery } from '../graphql/query/user';
 import { graphQLClient } from '../client/api';
-import { followUserMutation, unFollowUserMutation } from '../graphql/mutation/user';
+import { followUserMutation, unFollowUserMutation, updateUserMutation } from '../graphql/mutation/user';
 import { RequestDocument } from 'graphql-request';
 
 export const useGetUserById = (id: string) => {
@@ -89,4 +88,22 @@ export const useGetAllUser = (search:string) =>{
         enabled: !!search,
     })
     return {...query,data:query.data}
+}
+
+export const useUpdateUser = () => {
+    const queryClient = useQueryClient();
+
+    const mutation = useMutation({
+        mutationFn: async (input: { firstName?: string; lastName?: string; profileImage?: string; coverImage?: string, bio?: string, location?: string }) => {
+            return graphQLClient.request(updateUserMutation, { input });
+        },
+        onSuccess: async (data) => {
+            console.log('User updated successfully:', data);
+            await queryClient.invalidateQueries({ queryKey: ['current-user'] });
+        },
+        onError: (error) => {
+            console.error('Error updating user:', error);
+        }
+    })
+    return mutation;
 }

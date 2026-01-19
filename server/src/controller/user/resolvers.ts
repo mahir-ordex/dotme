@@ -124,7 +124,13 @@ const resolvers = {
 
             await UserServices.unfollowUser(ctx.user.id, to);
             return true;
+        },
+        UpdateUser: async (parent: any, { input }: { input: { firstName?: string; lastName?: string; profileImage?: string; coverImage?: string, bio?: string, location?: string } }, ctx: graphQLContext) => {
+            if (!ctx.user || !ctx.user.id) throw new Error("Unauthenticated");
+            const updatedUser = await UserServices.updateUser(ctx.user.id, input);
+            return updatedUser;
         }
+        
 
     }
 };
@@ -162,7 +168,7 @@ const extraResolvers = {
             }
         });
         return followRelations.map(relation => relation.following);
-    }
+    },
 };
 
 export { resolvers, extraResolvers };
