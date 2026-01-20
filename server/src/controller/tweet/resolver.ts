@@ -95,7 +95,7 @@ const queries = {
         // Generate direct upload URL for client
         const url = `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`;
         return url;
-    }
+    },
     // getPresignUrl: async (parent: any, { imageType, imageName }: { imageType: string; imageName: string },ctx :graphQLContext) => {
     //     if(!ctx.user){
     //         throw new Error("Please authenticate first");
@@ -115,6 +115,33 @@ const queries = {
         // const presignUrl = await getSignedUrl(s3Client, command, { expiresIn: 3600 });
         // return presignUrl;    
     // }
+    getTweetsPaginated: async (_parent: any, { page, limit }: { page: number; limit: number }, ctx: graphQLContext) => {
+        try {
+            const totalTweets = await prisma.tweet.count();
+            const totalPages = Math.ceil(totalTweets / limit);
+            const tweets = await prisma.tweet.findMany({
+                include:{
+                    author: true
+                },
+                orderBy: {
+                    createdAt: 'desc'
+                },
+                skip: (page - 1) * limit,
+                take: limit
+            });
+            return {
+                tweets,
+                totalCount: totalTweets,
+                hasNextPage: page < totalPages,
+                hasPreviousPage: page > 1,
+                currentPage: page,
+                totalPages
+            };
+        } catch (error) {
+            console.error('Error fetching paginated tweets:', error);
+            throw new Error('Failed to fetch paginated tweets');
+        }
+    }
 };
 
 export const resolvers = { 
