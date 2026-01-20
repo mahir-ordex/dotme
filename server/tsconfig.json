@@ -7,10 +7,10 @@
 
     // Environment Settings
     // See also https://aka.ms/tsconfig/module
-    "module": "commonjs",
-    "target": "es2020",
+    "module": "CommonJS",
+    "target": "ES2020",
     "types": ["node"],
-    "lib": ["es2020"],
+    "lib": ["ES2020"],
 
     // Other Outputs
     "sourceMap": true,
@@ -19,7 +19,6 @@
 
     // Stricter Typechecking Options
     "noUncheckedIndexedAccess": true,
-    "exactOptionalPropertyTypes": true,
 
     // Recommended Options
     "strict": true,
@@ -30,7 +29,7 @@
     "allowSyntheticDefaultImports": true,
     "forceConsistentCasingInFileNames": true,
     "resolveJsonModule": true,
-    "moduleResolution": "node"
+    "moduleResolution": "Node"
   },
   "include": [
     "src"

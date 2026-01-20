@@ -1,4 +1,3 @@
-import { redirect } from 'next/navigation';
 import { graphQLContext } from '../../interfaces';
 import Razorpay from "razorpay";
 import { prisma } from '../../utils/prismaClient';
