@@ -1,9 +1,10 @@
 import { redirect } from "next/navigation";
 
 interface Props {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }
 
-export default function EditProfileRedirect({ params }: Props) {
-  redirect(`/${params.id}`);
+export default async function EditProfileRedirect({ params }: Props) {
+  const { id } = await params;
+  redirect(`/${id}`);
 }
