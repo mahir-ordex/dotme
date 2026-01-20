@@ -85,8 +85,8 @@ export default function PremiumClientActions({ type }: PremiumClientActionsProps
         };
 
         try {
-            console.log('Razorpay env key:', process.env.NEXT_PUBLIC_KEY_REZORPAY);
-            console.log('Razorpay options:', options);
+            // console.log('Razorpay env key:', process.env.NEXT_PUBLIC_KEY_REZORPAY);
+            // console.log('Razorpay options:', options);
 
             if (typeof Razorpay === 'undefined') {
                 console.error('Razorpay is not loaded on window');

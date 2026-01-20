@@ -1,9 +1,11 @@
 "use client"
 import { Search, Bell, Mail, User as UserIcon, MoreHorizontal, Home as HomeIcon, Hash, Bookmark, Users, Zap } from 'lucide-react';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import Post from './post'
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
+import { useLogOut } from '../../Hooks/user';
 
 type NavbarProps = {
     user: {
@@ -16,26 +18,50 @@ type NavbarProps = {
 
 export const Navbar = ({ user }: NavbarProps) => {
     const pathname = usePathname();
+    const router = useRouter();
     const [showPostModel, setShowPostModel] = useState(false);
+    const [showUserMenu, setShowUserMenu] = useState(false);
+    const menuRef = useRef<HTMLDivElement>(null);
+
+    const { logout } = useLogOut();
+    const queryClient = useQueryClient();
+
+    // Close menu when clicking outside
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+                setShowUserMenu(false);
+            }
+        };
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => document.removeEventListener('mousedown', handleClickOutside);
+    }, []);
+
+    const handleLogout = async () => {
+        try {
+            await logout(); // Call the GraphQL logout query
+        } catch (error) {
+            console.error('Logout failed:', error);
+        } finally {
+            localStorage.removeItem('token');
+            queryClient.clear();
+            router.push('/login');
+            setShowUserMenu(false);
+        }
+    };
 
     const menuItems = [
         { icon: HomeIcon, label: "Home", href: "/" },
         { icon: Search, label: "Explore", href: "/explore" },
-        // { icon: Bell, label: "Notifications", href: "/notifications" },
-        // { icon: Mail, label: "Messages", href: "/messages" },
-        // { icon: Bookmark, label: "Bookmarks", href: "/bookmarks" },
-        // { icon: Users, label: "Communities", href: "/communities" },
         { icon: Zap, label: "Premium", href: "/premium" },
         { icon: UserIcon, label: "Profile", href: user.id ? `/${user.id}` : "/profile" },
-        // { icon: MoreHorizontal, label: "More", href: "/more" }   
     ];
 
     return (
         <>
             {/* Overlay for Post Modal */}
-            {/* {showPostModel && ( */}
-                { showPostModel && (
-                    <div className="fixed inset-0 bg-black bg-opacity-80 z-[9998] transition-opacity">
+            {showPostModel && (
+                <div className="fixed inset-0 bg-black bg-opacity-80 z-[9998] transition-opacity">
                     <div className="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-[9999]">
                         <Post
                             userImage={user.profileImage || "https://api.dicebear.com/7.x/avataaars/svg?seed=default"}
@@ -43,14 +69,14 @@ export const Navbar = ({ user }: NavbarProps) => {
                             onClose={() => setShowPostModel(false)}
                         />
                     </div>
-                    </div>
-                )}
-            {/* )} */}
+                </div>
+            )}
 
             {/* Mobile Bottom Navigation */}
             <div className="md:hidden fixed bottom-0 left-0 right-0 bg-black border-t border-gray-800 z-50">
                 <div className="flex justify-around py-2">
-                    {menuItems.slice(0, 5).map((item, index) => (
+                    {menuItems.slice(0, 5).map((item, index) => 
+                    (
                         <Link key={index} href={item.href || "/"}>
                             <button 
                                 className={`p-3 hover:bg-gray-900 rounded-full transition-colors ${
@@ -106,27 +132,39 @@ export const Navbar = ({ user }: NavbarProps) => {
                 </div>
 
                 {/* User Profile Section */}
-                <div className="absolute bottom-4 left-4 right-4">
-                    <Link href={user.id ? `/${user.id}` : "/profile"}>
-                        <button className="flex items-center space-x-3 p-3 rounded-full hover:bg-gray-900 transition-colors w-full">
-                            <img
-                                src={user.profileImage ? user.profileImage : "https://api.dicebear.com/7.x/avataaars/svg?seed=default"}
-                                alt="Profile"
-                                className="w-10 h-10 rounded-full"
-                            />
-                            <div className="flex-1 text-left hidden lg:block">
-                                <div className="font-bold text-[15px] leading-5">
-                                    {user?.firstName} {user?.lastName || ""}
-                                </div>
-                                <div className="text-gray-500 text-[15px] leading-5">
-                                    @{user?.firstName?.toLowerCase().replace(/\s+/g, '')}{user?.lastName?.toLowerCase() || ""}
-                                </div>
+                <div className="absolute bottom-4 left-4 right-4" ref={menuRef}>
+                    {/* Dropdown Menu */}
+                    {showUserMenu && (
+                        <div className="absolute bottom-full left-0 right-0 mb-2 bg-black border border-gray-800 rounded-2xl shadow-[0_0_15px_rgba(255,255,255,0.2)] overflow-hidden">
+                            <button 
+                                className="w-full px-4 py-3 text-left text-[15px] font-bold text-white hover:bg-gray-900 transition-colors"
+                                onClick={handleLogout}
+                            >
+                                Log out @{user?.firstName?.toLowerCase().replace(/\s+/g, '')}_{user?.lastName?.toLowerCase() || ""}
+                            </button>
+                        </div>
+                    )}
+
+                    <button 
+                        className="flex items-center space-x-3 p-3 rounded-full hover:bg-gray-900 transition-colors w-full"
+                        onClick={() => setShowUserMenu(!showUserMenu)}
+                    >
+                        <img
+                            src={user.profileImage ? user.profileImage : "https://api.dicebear.com/7.x/avataaars/svg?seed=default"}
+                            alt="Profile"
+                            className="w-10 h-10 rounded-full"
+                        />
+                        <div className="flex-1 text-left hidden lg:block">
+                            <div className="font-bold text-[15px] leading-5">
+                                {user?.firstName} {user?.lastName || ""}
                             </div>
-                            <MoreHorizontal className="w-5 h-5 hidden lg:block" />
-                        </button>
-                    </Link>
+                            <div className="text-gray-500 text-[15px] leading-5">
+                                @{user?.firstName?.toLowerCase().replace(/\s+/g, '')}{user?.lastName?.toLowerCase() || ""}
+                            </div>
+                        </div>
+                        <MoreHorizontal className="w-5 h-5 hidden lg:block" />
+                    </button>
                 </div>
-                
             </div>
         </>
     );

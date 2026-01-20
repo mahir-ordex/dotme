@@ -1,9 +1,10 @@
 // d:\social-app\.Me\client\src\Hooks\user.ts
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query' // ✅ Import useQueryClient
-import { getAllUserQuery, getCurrentUserQuery, getUserByIdQuery } from '../graphql/query/user';
+import { getAllUserQuery, getCurrentUserQuery, getUserByIdQuery, logOutQuery } from '../graphql/query/user';
 import { graphQLClient } from '../client/api';
 import { followUserMutation, unFollowUserMutation, updateUserMutation } from '../graphql/mutation/user';
 import { RequestDocument } from 'graphql-request';
+import { on } from 'events';
 
 export const useGetUserById = (id: string) => {
   return useQuery({
@@ -106,4 +107,19 @@ export const useUpdateUser = () => {
         }
     })
     return mutation;
+}
+
+export const useLogOut = () => {
+    const queryClient = useQueryClient();
+    
+    const query = useQuery({
+        queryKey: ['log-out'],
+        queryFn: async () => {
+            const data = await graphQLClient.request(logOutQuery as any);
+            return data;
+        },
+        enabled: false, // Don't run automatically - only when refetch is called
+    });
+
+    return { ...query, logout: query.refetch };
 }

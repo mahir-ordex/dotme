@@ -1,5 +1,6 @@
 import { GraphQLClient } from 'graphql-request';
 
+// Base client for client-side usage
 export const graphQLClient = new GraphQLClient(
     process.env.NEXT_PUBLIC_API_URL,
     {
@@ -28,3 +29,17 @@ export const graphQLClient = new GraphQLClient(
         },
     }
 );
+
+// Server-side client factory - use this in Server Components
+export const getServerGraphQLClient = (cookieHeader?: string) => {
+    return new GraphQLClient(
+        process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/graphql',
+        {
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json',
+                ...(cookieHeader ? { Cookie: cookieHeader } : {}),
+            },
+        }
+    );
+};

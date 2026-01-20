@@ -59,7 +59,7 @@ async function startServer() {
   await server.start();
 
   app.use(cors({
-    origin: ["http://localhost:3000",""], // or your frontend URL
+    origin: process.env.FRONTEND_URL, // or your frontend URL
     credentials: true
   }));
 
@@ -71,8 +71,14 @@ async function startServer() {
 
   app.use("/graphql", express.json(), expressMiddleware(server, {
     context: async ({ req , res}) => {
+      // Check Authorization header first
       const authHeader = req.headers.authorization;
-      const token = authHeader?.startsWith('Bearer ') ? authHeader.slice(7) : authHeader;
+      let token = authHeader?.startsWith('Bearer ') ? authHeader.slice(7) : authHeader;
+      
+      // If no Authorization header, check cookies
+      if (!token && req.cookies?.token) {
+        token = req.cookies.token;
+      }
       
       if (token) {
         try {

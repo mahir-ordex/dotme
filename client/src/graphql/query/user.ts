@@ -51,6 +51,7 @@ export const getUserByIdQuery = graphql(`
       coverImage
       location
       bio
+      createdAt
       tweets {
         id
         content
@@ -81,5 +82,11 @@ export const getAllUserQuery = graphql(`
       lastName
       profileImage
     }
+  }
+`)
+
+export const logOutQuery = graphql(`
+  query LogOut {
+    logOut
   }
 `)

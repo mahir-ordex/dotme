@@ -2,9 +2,10 @@ import { getCurrentUserQuery, getUserByIdQuery } from '../../graphql/query/user'
 import { FeedCard } from '../components/feedCart';
 import { ArrowLeft, Calendar, MapPin } from 'lucide-react';
 import Link from 'next/link';
-import { graphQLClient } from '../../client/api';
+import { getServerGraphQLClient } from '../../client/api';
 import { FollowBtn } from '../components/FollowBtn';
 import XLayOut from '../components/xLayOut';
+import { cookies } from 'next/headers';
 
 interface ProfilePageProps {
   params: Promise<{
@@ -13,14 +14,19 @@ interface ProfilePageProps {
 }
 
 export default async function ProfilePage({ params }: ProfilePageProps) {
-  // Await params in Next.js 15
   const { id } = await params;
   try {
-    let result = await graphQLClient.request(getUserByIdQuery as any, { id });
-    let currentUserResult = await graphQLClient.request(getCurrentUserQuery as any, { id });
+    // Get cookies from the request to pass to GraphQL client
+    const cookieStore = await cookies();
+    const cookieHeader = cookieStore.toString();
+    
+    // Create server-side client with cookies
+    const serverClient = getServerGraphQLClient(cookieHeader);
+    
+    // Use the server client for requests
+    let result = await serverClient.request(getUserByIdQuery, { id });
+    let currentUserResult = await serverClient.request(getCurrentUserQuery);
     const user = result.getUserById;
-
-
     const userID = currentUserResult;
 
     console.log('ProfilePage : : :  : : : : : ::  ::', userID);
@@ -56,28 +62,34 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
             </div>
 
             {/* Cover Photo */}
-            <div className={`h-48 border-none  ${user.coverImage ? '' : 'bg-gray-800'}`}>
-              <img src={user.coverImage} className='object-cover w-full h-full'/>
+            <div className={`h-48 border-none ${user.coverImage ? '' : 'bg-gray-800'}`}>
+              {user.coverImage && (
+                <img src={user.coverImage} className='object-cover w-full h-full' alt="Cover" />
+              )}
             </div>
 
             {/* Profile Info */}
             <div className="px-4 pb-4">
               {/* Profile Picture */}
-              <div className="flex justify-between items-end mb-4">
-                <div className="-mt-16">
+              <div className="flex justify-between items-start mb-4">
+                <div className="-mt-16 relative z-10">
                   <img
                     src={user.profileImage || "https://api.dicebear.com/7.x/avataaars/svg?seed=default"}
                     alt="Profile"
-                    className="w-32 h-32 rounded-full border-4 border-black"
+                    className="w-32 h-32 rounded-full border-4 border-black bg-black"
                   />
                 </div>
                 
-                {userID?.getCurrentUser?.id === user.id ? (
-                  <Link href={`/${user.id}/edit`}>
-                    Edit Profile
-                  </Link>
-                ) : (<FollowBtn id={id}></FollowBtn>)}
-
+                <div className="mt-4">
+                  {userID?.getCurrentUser?.id === user.id ? (
+                    <Link 
+                      href={`/${user.id}/edit`}
+                      className="px-4 py-2 rounded-full font-semibold border border-gray-600 hover:bg-gray-900 transition-colors"
+                    >
+                      Edit Profile
+                    </Link>
+                  ) : (<FollowBtn id={id}></FollowBtn>)}
+                </div>
               </div>
 
               {/* User Info */}

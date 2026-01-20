@@ -8,6 +8,7 @@ export const types = `#graphql
     coverImage: String
     bio: String
     location: String
+    createdAt: String
     tweets: [Tweet]
     follower: [User]
     following: [User]

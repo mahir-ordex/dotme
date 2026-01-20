@@ -53,6 +53,16 @@ const resolvers = {
                 return e
             }
         },
+        logOut: async (parent: any, args: any, context: any) => {
+            try {   
+            const { res } = context;
+            res.clearCookie("token");
+            return true;
+            } catch (e) {
+                console.error("Logout error:", e);
+                return false;
+            }
+        },
         getCurrentUser: async (parent: any, args: any, context: any) => {
             if (!context.user) {
                 return null;
