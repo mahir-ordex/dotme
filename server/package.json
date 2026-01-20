@@ -9,11 +9,6 @@
     "start": "node ./dist/index.js"
   },
   "devDependencies": {
-    "@types/cookie-parser": "^1.4.10",
-    "@types/cors": "^2.8.19",
-    "@types/express": "^4.17.25",
-    "@types/jsonwebtoken": "^9.0.10",
-    "@types/multer": "^2.0.0",
     "dotenv-cli": "^11.0.0",
     "nodemon": "^3.1.11",
     "ts-node": "^10.9.2",
@@ -26,6 +21,11 @@
     "@aws-sdk/s3-request-presigner": "^3.943.0",
     "@prisma/adapter-pg": "^7.2.0",
     "@prisma/client": "^6.19.2",
+    "@types/cookie-parser": "^1.4.10",
+    "@types/cors": "^2.8.19",
+    "@types/express": "^4.17.25",
+    "@types/jsonwebtoken": "^9.0.10",
+    "@types/multer": "^2.0.0",
     "@types/node": "^24.10.8",
     "axios": "^1.13.2",
     "cloudinary": "^2.8.0",
@@ -40,7 +40,5 @@
     "razorpay": "^2.9.6",
     "redis": "^5.10.0",
     "typescript": "^5.9.3"
-  },
-  "keywords": [],
-  "description": ""
+  }
 }
