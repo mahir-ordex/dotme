@@ -3,7 +3,7 @@ import axios from "axios";
 import { prisma } from "../../utils/prismaClient.js";
 import JwtServices from "../../utils/jwtServices.js";
 import type { graphQLContext } from "../../interfaces.js";
-import type { User } from "@prisma/client";
+import type { User } from "../../../generated/prisma/client";
 import { UserServices } from "../../utils/userServices.js";
 import { client } from '../../utils/redisClient';
 
