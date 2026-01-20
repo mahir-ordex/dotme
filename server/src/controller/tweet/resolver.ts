@@ -61,7 +61,7 @@ const queries = {
             const cachedTweets = await client.get('ALL_TWEETS_');
             if (cachedTweets) {
                 console.log('Fetching tweets from Redis cache');
-                return JSON.parse(cachedTweets);
+                return JSON.parse(cachedTweets.toString());
             }
             const tweets = await prisma.tweet.findMany({
                 include: {
