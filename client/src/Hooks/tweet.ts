@@ -1,8 +1,9 @@
+import { Tweet } from './../../../server/src/controller/tweet/index';
 import { createTweetMutation } from './../graphql/mutation/tweet';
 import { CreateTweetInput } from '../gql/graphql';
 import { graphQLClient } from '../client/api';
-import { getAllTweetsQuery } from "../graphql/query/tweet";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { getAllTweetsQuery, getTweetsPaginatedQuery } from "../graphql/query/tweet";
+import { useMutation, useQuery, useQueryClient, useInfiniteQuery } from "@tanstack/react-query";
 import { RequestDocument } from 'graphql-request';
 
 
@@ -43,7 +44,7 @@ export const createTweet = () => {
         },
         onSuccess: (data) => {
             queryClient.invalidateQueries({
-                queryKey: ['all-tweet']
+                queryKey: ['paginated-tweets']
             });
         },
         onError: (error) => {
@@ -52,5 +53,28 @@ export const createTweet = () => {
     });
     
     return mutation;
+}
+
+export const usePaginatedTweets = (limit: number = 15) => {
+    const query = useInfiniteQuery({
+        queryKey: ['paginated-tweets', limit],
+        queryFn: async ({ pageParam = 1 }) => {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                throw new Error('No authentication token');
+            }
+            const result = await graphQLClient.request(getTweetsPaginatedQuery as any, { page: pageParam, limit });
+            return result.getTweetsPaginated;
+        },
+        getNextPageParam: (lastPage: any) => {
+            if (lastPage.hasNextPage) {
+                return lastPage.currentPage + 1;
+            }
+            return undefined;
+        },
+        initialPageParam: 1,
+    });
+    const tweets = query.data?.pages.flatMap((page: any) => page.tweets) || [];
+    return { ...query, tweets };
 }
     

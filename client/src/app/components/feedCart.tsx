@@ -95,15 +95,15 @@ export const FeedCard = ({ tweet, user }: FeedCardProp) => {
                     </p>
 
                     {/* Tweet Image */}
-                    {tweet.imageUrl && (
-                        <div className="mb-3 rounded-2xl overflow-hidden">
+                    {tweet.imageUrl.length > 0 && tweet.imageUrl.map((img, index) => (
+                        <div key={img || index} className="mb-3 rounded-2xl overflow-hidden">
                             <img 
-                                src={tweet.imageUrl} 
+                                src={img} 
                                 alt="Tweet content" 
                                 className="w-full h-auto object-cover max-h-96 sm:max-h-[500px]" 
                             />
                         </div>
-                    )}
+                    ))}
 
                     {/* Interaction Buttons */}
                     <div className="flex items-center justify-between mt-3">

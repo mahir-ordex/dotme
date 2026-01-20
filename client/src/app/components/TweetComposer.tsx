@@ -20,7 +20,7 @@ const TweetComposer = ({ user }: any) => {
     // Cloudinary upload handler for multiple images
     const handleUploadToCloudinary = async (files: File[]): Promise<string[]> => {
         try {
-            const uploadPreset = process.env.NEXT_PUBLIC_CLOUDINARY_UNSIGNED_PRESET || 'supa@me';
+            const uploadPreset = process.env.NEXT_PUBLIC_CLOUDINARY_UNSIGNED_PRESET;
             if (!uploadPreset) throw new Error('Cloudinary unsigned upload preset missing');
             const urls: string[] = [];
             for (const file of files) {

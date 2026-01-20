@@ -23,3 +23,27 @@ export const getPresignUrlQuery = graphql(`
     getPresignUrl(imageType: $imageType, imageName: $imageName)
   }
 `)
+
+export const getTweetsPaginatedQuery = graphql(`
+  query GetTweetsPaginated($page: Int!, $limit: Int!) {
+    getTweetsPaginated(page: $page, limit: $limit) {
+      tweets {
+        id
+        content
+        imageUrl
+        createdAt
+        author {
+          id
+          firstName
+          lastName
+          profileImage
+        }
+      }
+      totalCount
+      hasNextPage
+      hasPreviousPage
+      currentPage
+      totalPages
+    }
+  }
+`)

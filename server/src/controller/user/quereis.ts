@@ -3,4 +3,5 @@ export const quereis = `
     getCurrentUser: User
     getUserById(id: String!): User
     getAllUser(search: String!): [User]
+    logOut: Boolean!
 `;

@@ -1,14 +1,14 @@
-
-
-
-export default function UserLayout({
+export default function ProfileLayout({
   children,
+  modal,
 }: {
-  children: React.ReactNode
+  children: React.ReactNode;
+  modal: React.ReactNode;
 }) {
   return (
-    <>
+    <div className="relative min-h-screen">
       {children}
-    </>
-  )
+      {modal}
+    </div>
+  );
 }
