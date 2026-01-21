@@ -3,7 +3,7 @@ import axios from "axios";
 import { prisma } from "../../utils/prismaClient.js";
 import JwtServices from "../../utils/jwtServices.js";
 import type { graphQLContext } from "../../interfaces.js";
-import type { User } from "../../../generated/prisma/client";
+import type { User } from "../../../generated/prisma";
 import { UserServices } from "../../utils/userServices.js";
 import { client } from '../../utils/redisClient';
 
@@ -54,10 +54,10 @@ const resolvers = {
             }
         },
         logOut: async (parent: any, args: any, context: any) => {
-            try {   
-            const { res } = context;
-            res.clearCookie("token");
-            return true;
+            try {
+                const { res } = context;
+                res.clearCookie("token");
+                return true;
             } catch (e) {
                 console.error("Logout error:", e);
                 return false;
@@ -87,7 +87,7 @@ const resolvers = {
                 if (!ctx || !ctx.user) {
                     throw new Error("Unauthenticated!");
                 }
-                console.log("backend search :",search)
+                console.log("backend search :", search)
 
                 const allUser = await prisma.user.findMany({
                     where: {
@@ -140,7 +140,7 @@ const resolvers = {
             const updatedUser = await UserServices.updateUser(ctx.user.id, input);
             return updatedUser;
         }
-        
+
 
     }
 };
@@ -154,7 +154,7 @@ const extraResolvers = {
             orderBy: {
                 createdAt: 'desc'
             },
-            
+
         });
     },
     follower: async (parent: User) => {
