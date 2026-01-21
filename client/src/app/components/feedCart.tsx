@@ -21,7 +21,7 @@ export const FeedCard = ({ tweet, user }: FeedCardProp) => {
 
         try {
             const date = new Date(Number(dateString));
-            
+
             if (isNaN(date.getTime())) {
                 return 'Unknown date';
             }
@@ -31,7 +31,7 @@ export const FeedCard = ({ tweet, user }: FeedCardProp) => {
                 month: 'short',
                 day: 'numeric'
             });
-            
+
             return formattedDate;
         } catch (error) {
             console.error("Error formatting date:", error);
@@ -53,10 +53,10 @@ export const FeedCard = ({ tweet, user }: FeedCardProp) => {
                 {/* Profile Picture */}
                 <div className="flex-shrink-0">
                     <Link href={`/${author.id}`}>
-                        <img 
-                            src={author.profileImage || 'https://api.dicebear.com/7.x/avataaars/svg?seed=default'} 
-                            alt="Profile" 
-                            className="rounded-full w-10 h-10 sm:w-12 sm:h-12 cursor-pointer hover:opacity-80 transition-opacity" 
+                        <img
+                            src={author.profileImage || 'https://api.dicebear.com/7.x/avataaars/svg?seed=default'}
+                            alt="Profile"
+                            className="rounded-full w-10 h-10 sm:w-12 sm:h-12 cursor-pointer hover:opacity-80 transition-opacity"
                         />
                     </Link>
                 </div>
@@ -80,7 +80,7 @@ export const FeedCard = ({ tweet, user }: FeedCardProp) => {
                                 {formatDate(tweet.createdAt)}
                             </span>
                         </div>
-                        
+
                         {/* Follow Button - Only show if not current user */}
                         {user && user.id !== author.id && (
                             <div className="flex-shrink-0">
@@ -89,51 +89,49 @@ export const FeedCard = ({ tweet, user }: FeedCardProp) => {
                         )}
                     </div>
 
-                    {/* Tweet Content */}
                     <p className="mb-3 text-sm sm:text-base break-words whitespace-pre-wrap">
                         {tweet.content || 'No content'}
                     </p>
 
-                    {/* Tweet Image */}
-                    {tweet.imageUrl.length > 0 && tweet.imageUrl.map((img, index) => (
+                    {tweet.imageUrl.length > 0 ? tweet.imageUrl.map((img, index) => (
                         <div key={img || index} className="mb-3 rounded-2xl overflow-hidden">
-                            <img 
-                                src={img} 
-                                alt="Tweet content" 
-                                className="w-full h-auto object-cover max-h-96 sm:max-h-[500px]" 
+                            <img
+                                src={img}
+                                alt="Tweet content"
+                                className="w-full h-auto object-cover max-h-96 sm:max-h-[500px]"
                             />
                         </div>
-                    ))}
+                    )) : null}
 
                     {/* Interaction Buttons */}
                     <div className="flex items-center justify-between mt-3">
                         <div className="flex items-center gap-6 sm:gap-10 text-gray-400">
-                            <button 
-                                aria-label="comment" 
+                            <button
+                                aria-label="comment"
                                 className="flex items-center gap-1 text-xs sm:text-sm hover:text-blue-400 transition-colors group"
                             >
                                 <FaRegComment className="text-base sm:text-lg group-hover:scale-110 transition-transform" />
                                 <span>0</span>
                             </button>
 
-                            <button 
-                                aria-label="repost" 
+                            <button
+                                aria-label="repost"
                                 className="flex items-center gap-1 text-xs sm:text-sm hover:text-green-400 transition-colors group"
                             >
                                 <BiRepost className="text-lg sm:text-xl group-hover:scale-110 transition-transform" />
                                 <span>0</span>
                             </button>
 
-                            <button 
-                                aria-label="like" 
+                            <button
+                                aria-label="like"
                                 className="flex items-center gap-1 text-xs sm:text-sm hover:text-red-500 transition-colors group"
                             >
                                 <FaRegHeart className="text-base sm:text-lg group-hover:scale-110 transition-transform" />
                                 <span>0</span>
                             </button>
 
-                            <button 
-                                aria-label="analytics" 
+                            <button
+                                aria-label="analytics"
                                 className="hidden sm:flex items-center gap-1 text-xs sm:text-sm hover:text-yellow-400 transition-colors group"
                             >
                                 <AiOutlineAreaChart className="text-base sm:text-lg group-hover:scale-110 transition-transform" />
@@ -141,8 +139,8 @@ export const FeedCard = ({ tweet, user }: FeedCardProp) => {
                             </button>
                         </div>
 
-                        <button 
-                            aria-label="share" 
+                        <button
+                            aria-label="share"
                             className="text-gray-400 hover:text-blue-400 transition-colors"
                         >
                             <LuShare className="text-base sm:text-lg hover:scale-110 transition-transform" />
