@@ -50,8 +50,8 @@ async function startServer() {
     }
   };
 
-  const server = new ApolloServer({ 
-    typeDefs, 
+  const server = new ApolloServer({
+    typeDefs,
     resolvers,
     introspection: true
   });
@@ -59,7 +59,18 @@ async function startServer() {
   await server.start();
 
   app.use(cors({
-    origin: process.env.FRONTEND_URL, // or your frontend URL
+    origin: (origin, callback) => {
+      const allowedOrigins = [
+        process.env.FRONTEND_URL,
+        'http://localhost:3000'
+      ].filter(Boolean) as string[];
+
+      if (!origin || allowedOrigins.includes(origin) || origin.endsWith('.vercel.app')) {
+        callback(null, true);
+      } else {
+        callback(new Error('Not allowed by CORS'));
+      }
+    },
     credentials: true
   }));
 
@@ -70,21 +81,21 @@ async function startServer() {
   app.use('/api/upload', uploadRouter);
 
   app.use("/graphql", express.json(), expressMiddleware(server, {
-    context: async ({ req , res}) => {
+    context: async ({ req, res }) => {
       // Check Authorization header first
       const authHeader = req.headers.authorization;
       let token = authHeader?.startsWith('Bearer ') ? authHeader.slice(7) : authHeader;
-      
+
       // If no Authorization header, check cookies
       if (!token && req.cookies?.token) {
         token = req.cookies.token;
       }
-      
+
       if (token) {
         try {
           const userPayload = await JwtServices.decodeToken(token);
           if (userPayload && typeof userPayload !== 'string' && userPayload.id) {
-            const user = await prisma.user.findUnique({ 
+            const user = await prisma.user.findUnique({
               where: { id: userPayload.id }
             });
             // console.log('Context user:', user);
@@ -94,7 +105,7 @@ async function startServer() {
           console.log('Token decode failed:', error.message);
         }
       }
-      return {req, res};
+      return { req, res };
     }
   }));
 
@@ -102,7 +113,7 @@ async function startServer() {
   app.listen(port, () => {
     console.log(`Server running at http://localhost:${port}/graphql`)
     connectWithRedis()
-});
+  });
 }
 
 startServer().catch(error => {
