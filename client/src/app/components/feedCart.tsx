@@ -101,7 +101,7 @@ export const FeedCard = ({ tweet, user }: FeedCardProp) => {
                                 className="w-full h-auto object-cover max-h-96 sm:max-h-[500px]"
                             />
                         </div>
-                    )) : null}
+                    )) : (<></>)}
 
                     {/* Interaction Buttons */}
                     <div className="flex items-center justify-between mt-3">
